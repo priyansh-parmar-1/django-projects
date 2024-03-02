@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as user_login, logout as user_logout
+from .models import *
 from django.http import HttpResponse
 
 
@@ -10,17 +11,18 @@ def home(request):
     return render(request, 'index.html')
 
 def login(request):
+
     if request.method == 'POST':
         uname = request.POST.get('username')
         pass1 = request.POST.get('pass')
 
-        user = authenticate(request,username=uname,password=pass1)
-        if user is not None:
-            user_login(request, user)
-            return redirect('home')
-        else:
-           # return HttpResponse("Username or password incorrect")
-           return render(request, 'login.html',{'msg':"Username or password incorrect"})
+        cust_obj = Customer.objects.get(email=uname)
+        if cust_obj.email == uname:
+            if cust_obj.password == pass1:
+                return redirect('home')
+            else:
+                # return HttpResponse("Username or password incorrect")
+                return render(request, 'login.html', {'msg': "Username or password incorrect"})
     return render(request,'login.html')
 
 def signup(requst):
