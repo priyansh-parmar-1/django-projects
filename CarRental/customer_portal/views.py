@@ -9,6 +9,28 @@ from django.http import HttpResponse
 def home(request):
     return render(request, 'index.html')
 
+#adding  views
+def about(request):
+    return render(request, "about.html")
+
+def booking(request):
+    return render(request, "booking.html")
+
+def service(request):
+    return render(request, "service.html")
+
+def contact(request):
+    return render(request, "contact.html")
+
+def detail(request):
+    return render(request, "detail.html")
+
+
+def car(request):
+    return render(request, "car.html")
+
+
+#=======
 def login(request):
     if request.method == 'POST':
         uname = request.POST.get('username')

@@ -23,5 +23,21 @@ urlpatterns = [
     path('', login, name='login'),
     path('signup/', signup, name='signup'),
     path('home/',home,name='home'),
-    path('logout/',logout, name='logout')
+    path('logout/',logout, name='logout'),
+
+    #adding urls
+
+    path('about/', about, name='about'),
+    path('about.html/', about),
+    path('booking/',booking, name='booking'),
+    path('booking.html/', booking),
+    path('service/',service, name='service'),
+    path('service.html/', service),
+    path('contact/',contact, name='contact'),
+    path('contact.html/', contact),
+    path('detail/', detail, name='detail'),
+    path('detail.html/', detail),
+    path('car/', car, name='car'),
+    path('car.html/', car),
+
 ]
