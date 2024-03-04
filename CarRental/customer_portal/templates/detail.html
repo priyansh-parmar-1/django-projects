@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 
 <head>
@@ -9,24 +10,44 @@
     <meta content="Free HTML Templates" name="description">
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+<!--    <link href="img/favicon.ico" rel="icon">-->
+<!--    <link href="img/favicon.ico" rel="icon">-->
+        <link rel="icon"  href="{% static 'img/favicon.ico' %}">
+
 
     <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet"> 
+    <link rel="preconnect" href="{% static 'https://fonts.gstatic.com' %}">
+<!--    <link rel="preconnect" href="https://fonts.gstatic.com">-->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
+<!--        <link rel="stylesheet"  href="{% static 'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap' %}">-->
 
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet"  href="{% static 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css' %}">
+
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">-->
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+        <link rel="stylesheet"  href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}">
+
+<!--    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">-->
+<!--    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />-->
+            <link rel="stylesheet"  href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}">
+
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+<!--    <link href="css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+<!--    <link href="css/style.css" rel="stylesheet">-->
+
+
+<!--    added link for css-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+
+
 </head>
 
 <body>
