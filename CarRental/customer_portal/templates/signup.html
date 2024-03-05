@@ -51,11 +51,12 @@ body{
     bottom: -80px;
 }
 form{
-    height: 600px;
+    height: 965px;
     width: 450px;
     background-color: rgba(255,255,255,0.13);
-    position: absolute;
+<!--    position: absolute;-->
     transform: translate(-50%,-50%);
+    margin-left:100px;
     top: 50%;
     left: 50%;
     border-radius: 10px;
@@ -139,9 +140,14 @@ button{
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
+
     <form action="" method="post">
-        {% csrf_token %} 
+        {% csrf_token %}
         <h3>Signup Here</h3>
+
+        <label for="username">Inser Your Image</label>
+        <input type="file" placeholder="" name="cust_image" id="cust_image">
+
 
         <label for="username">Username</label>
         <input type="text" placeholder="Username" name="username" id="username">
@@ -149,8 +155,20 @@ button{
         <label for="email">Email</label>
         <input type="email" placeholder="Email or Phone" name="email" id="email">
 
+        <label for="email">Driving Lincence No</label>
+        <input type="number" placeholder="Enter Driving Licence No" name="email" id="dl">
+
+
+        <label for="email">Address</label>
+        <input type="email" placeholder="Yor Address" name="address" id="address">
+
+        <label for="username">Inser Driving Licence Image</label>
+        <input type="file" placeholder="" name="dl_image" id="dl_image">
+
+
         <label for="password1">Password</label>
         <input type="password" placeholder="Password" id="password1" name="password1">
+
 
 
         <label for="password2">Confrom Password</label>
