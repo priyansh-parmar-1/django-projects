@@ -143,9 +143,9 @@ class Customer(models.Model):
     dl_no = models.CharField(max_length=16)
     address = models.CharField(max_length=200)
     password = models.CharField(max_length=16)
-    dl_image = models.ImageField(upload_to='media/')
+    dl_image = models.ImageField(upload_to='dl_img/')
     is_verified = models.IntegerField()
-    cust_image = models.ImageField(upload_to='media/')
+    cust_image = models.ImageField(upload_to='cust_img/')
 
     class Meta:
         managed = False
