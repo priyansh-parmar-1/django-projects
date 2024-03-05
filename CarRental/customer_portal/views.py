@@ -8,55 +8,38 @@ from django.http import HttpResponse
 # Create your views here.
 
 def home(request):
-    return render(request, 'index.html')
+    car = Car.objects.all()
 
-#adding  views
-def about(request):
-    return render(request, "about.html")
-
-def booking(request):
-    return render(request, "booking.html")
-
-def service(request):
-    return render(request, "service.html")
-
-def contact(request):
-    return render(request, "contact.html")
-
-def detail(request):
-    return render(request, "detail.html")
+    return render(request, 'index.html', {'cars': car})
 
 
-def car(request):
-    return render(request, "car.html")
-
-
-#=======
 def login(request):
+    try:
+        if request.method == 'POST':
+            uname = request.POST.get('username')
+            pass1 = request.POST.get('pass')
+            cust_obj = Customer.objects.get(email=uname)
+            if cust_obj.email == uname:
+                if cust_obj.password == pass1:
+                    return redirect('home')
+                else:
+                    return render(request, 'login.html', {'msg': "Email or password incorrect", "uname": uname, "pass1": pass1})
+    except Customer.DoesNotExist:
+        return render(request, 'login.html', {'msg': "Customer does not exist", "uname": uname, "pass1": pass1})
+    return render(request, 'login.html')
 
+
+def signup(request):
     if request.method == 'POST':
         uname = request.POST.get('username')
-        pass1 = request.POST.get('pass')
-
-        cust_obj = Customer.objects.get(email=uname)
-        if cust_obj.email == uname:
-            if cust_obj.password == pass1:
-                return redirect('home')
-            else:
-                # return HttpResponse("Username or password incorrect")
-                return render(request, 'login.html', {'msg': "Username or password incorrect"})
-    return render(request,'login.html')
-
-def signup(requst):
-    if requst.method == 'POST':
-        uname = requst.POST.get('username')
-        email = requst.POST.get('email')
-        pass1 = requst.POST.get('password1')
-        new_cust = Customer(name=uname, email=email, password= pass1, is_verified=1)
+        email = request.POST.get('email')
+        pass1 = request.POST.get('password1')
+        new_cust = Customer(name=uname, email=email, password=pass1, is_verified=0)
         new_cust.save()
         print('user created')
         return redirect('login')
-    return render(requst,'signup.html')
+    return render(request, 'signup.html')
+
 
 def logout(requst):
     user_logout(requst)

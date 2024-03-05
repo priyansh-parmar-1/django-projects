@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <!-- Design by foolishdeveloper.com -->
-    <title>Signup Page</title>
+    <title>Signup</title>
  
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -56,7 +56,9 @@ form{
     background-color: rgba(255,255,255,0.13);
 <!--    position: absolute;-->
     transform: translate(-50%,-50%);
-    margin-left:100px;
+    margin-left:34%;
+    margin-top: 2%;
+    margin-bottom: 2%;
     top: 50%;
     left: 50%;
     border-radius: 10px;
@@ -145,24 +147,24 @@ button{
         {% csrf_token %}
         <h3>Signup Here</h3>
 
-        <label for="username">Inser Your Image</label>
-        <input type="file" placeholder="" name="cust_image" id="cust_image">
+        <label for="cust_image">Upload Your Image</label>
+        <input type="file" name="cust_image" id="cust_image">
 
 
-        <label for="username">Username</label>
-        <input type="text" placeholder="Username" name="username" id="username">
+        <label for="fullname">Full name</label>
+        <input type="text" placeholder="Enter full name" name="fullname" id="fullname">
 
         <label for="email">Email</label>
-        <input type="email" placeholder="Email or Phone" name="email" id="email">
+        <input type="email" placeholder="Enter email" name="email" id="email">
 
-        <label for="email">Driving Lincence No</label>
+        <label for="email">Driving Licence No</label>
         <input type="number" placeholder="Enter Driving Licence No" name="email" id="dl">
 
 
         <label for="email">Address</label>
-        <input type="email" placeholder="Yor Address" name="address" id="address">
+        <input type="email" placeholder="Your Address" name="address" id="address">
 
-        <label for="username">Inser Driving Licence Image</label>
+        <label for="dl_image">Upload Driving Licence Image</label>
         <input type="file" placeholder="" name="dl_image" id="dl_image">
 
 
@@ -171,11 +173,11 @@ button{
 
 
 
-        <label for="password2">Confrom Password</label>
-        <input type="password" placeholder="Confrom Password" id="password2" name="password2">
+        <label for="password2">Confirm Password</label>
+        <input type="password" placeholder="Confirm Password" id="password2" name="password2">
         <button type="submit">Signup</button>
-        
-        <a href="{% url 'login' %}" >i have already account</a>
+
+        <a href="{% url 'login' %}" >already have an account?</a>
     </form>
 </body>
 </html>

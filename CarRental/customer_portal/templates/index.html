@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
+{% load static %}
+{% static "img" as baseUrl %}
 <!--header start from here-->
 <head>
 
@@ -97,20 +98,10 @@
     <div class="container-fluid bg-white pt-3 px-lg-5">
         <div class="row mx-n2">
             <div class="col-xl-2 col-lg-4 col-md-6 px-2">
-                <select class="custom-select px-4 mb-3" style="height: 50px;">
-                    <option selected>Pickup Location</option>
-                    <option value="1">Location 1</option>
-                    <option value="2">Location 2</option>
-                    <option value="3">Location 3</option>
-                </select>
+                <input type="text" class="form-control p-4" placeholder="Pickup Location" required="required">
             </div>
             <div class="col-xl-2 col-lg-4 col-md-6 px-2">
-                <select class="custom-select px-4 mb-3" style="height: 50px;">
-                    <option selected>Drop Location</option>
-                    <option value="1">Location 1</option>
-                    <option value="2">Location 2</option>
-                    <option value="3">Location 3</option>
-                </select>
+                <input type="text" class="form-control p-4" placeholder="Drop Location" required="required">
             </div>
             <div class="col-xl-2 col-lg-4 col-md-6 px-2">
                 <div class="date mb-3" id="date" data-target-input="nearest">
@@ -124,14 +115,14 @@
                         data-target="#time" data-toggle="datetimepicker" />
                 </div>
             </div>
-            <div class="col-xl-2 col-lg-4 col-md-6 px-2">
+           <!-- <div class="col-xl-2 col-lg-4 col-md-6 px-2">
                 <select class="custom-select px-4 mb-3" style="height: 50px;">
                     <option selected>Select A Car</option>
                     <option value="1">Car 1</option>
                     <option value="2">Car 1</option>
                     <option value="3">Car 1</option>
                 </select>
-            </div>
+            </div>-->
             <div class="col-xl-2 col-lg-4 col-md-6 px-2">
                 <button class="btn btn-primary btn-block mb-3" type="submit" style="height: 50px;">Search</button>
             </div>
@@ -183,7 +174,7 @@
     <!-- About Start -->
     <div class="container-fluid py-5">
         <div class="container pt-5 pb-3">
-            <h1 class="display-1 text-primary text-center">01</h1>
+            <!--<h1 class="display-1 text-primary text-center">01</h1>-->
             <h1 class="display-4 text-uppercase text-center mb-5">Welcome To <span class="text-primary">car castle</span></h1>
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
@@ -235,135 +226,34 @@
     <!-- Rent A Car Start -->
     <div class="container-fluid py-5">
         <div class="container pt-5 pb-3">
-            <h1 class="display-1 text-primary text-center">02</h1>
+           <!-- <h1 class="display-1 text-primary text-center">02</h1>-->
             <h1 class="display-4 text-uppercase text-center mb-5">Find Your Car</h1>
             <div class="row">
+                {% for car in cars %}
                 <div class="col-lg-4 col-md-6 mb-2">
+
                     <div class="rent-item mb-4">
-                        <img class="img-fluid mb-4" src="/static/img/car-rent-1.png" alt="">
-                        <h4 class="text-uppercase mb-4">Mercedes Benz R3</h4>
+                        <img class="img-fluid mb-4" src='{{baseUrl}}/{{car.car_image}}' alt="">
+                        <h4 class="text-uppercase mb-4">{{ car.model_name }}</h4>
                         <div class="d-flex justify-content-center mb-4">
                             <div class="px-2">
                                 <i class="fa fa-car text-primary mr-1"></i>
-                                <span>2015</span>
+                                <span>{{ car.model_year }}</span>
                             </div>
-                            <div class="px-2 border-left border-right">
+                            <div class="px-2 border-left ">
                                 <i class="fa fa-cogs text-primary mr-1"></i>
+                                {% if car.is_manual == 0 %}
                                 <span>AUTO</span>
+                                {% else %}
+                                <span>MANUAL</span>
+                                {% endif %}
                             </div>
-                            <div class="px-2">
-                                <i class="fa fa-road text-primary mr-1"></i>
-                                <span>25K</span>
-                            </div>
+
                         </div>
-                        <a class="btn btn-primary px-3" href="">$99.00/Day</a>
+                        <a class="btn btn-primary px-3" href="">{{ car.charge }}/hour</a>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 mb-2">
-                    <div class="rent-item active mb-4">
-                        <img class="img-fluid mb-4" src="/static/img/car-rent-2.png" alt="">
-                        <h4 class="text-uppercase mb-4">Mercedes Benz R3</h4>
-                        <div class="d-flex justify-content-center mb-4">
-                            <div class="px-2">
-                                <i class="fa fa-car text-primary mr-1"></i>
-                                <span>2015</span>
-                            </div>
-                            <div class="px-2 border-left border-right">
-                                <i class="fa fa-cogs text-primary mr-1"></i>
-                                <span>AUTO</span>
-                            </div>
-                            <div class="px-2">
-                                <i class="fa fa-road text-primary mr-1"></i>
-                                <span>25K</span>
-                            </div>
-                        </div>
-                        <a class="btn btn-primary px-3" href="">$99.00/Day</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-2">
-                    <div class="rent-item mb-4">
-                        <img class="img-fluid mb-4" src="/static/img/car-rent-3.png" alt="">
-                        <h4 class="text-uppercase mb-4">Mercedes Benz R3</h4>
-                        <div class="d-flex justify-content-center mb-4">
-                            <div class="px-2">
-                                <i class="fa fa-car text-primary mr-1"></i>
-                                <span>2015</span>
-                            </div>
-                            <div class="px-2 border-left border-right">
-                                <i class="fa fa-cogs text-primary mr-1"></i>
-                                <span>AUTO</span>
-                            </div>
-                            <div class="px-2">
-                                <i class="fa fa-road text-primary mr-1"></i>
-                                <span>25K</span>
-                            </div>
-                        </div>
-                        <a class="btn btn-primary px-3" href="">$99.00/Day</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-2">
-                    <div class="rent-item mb-4">
-                        <img class="img-fluid mb-4" src="/static/img/car-rent-4.png" alt="">
-                        <h4 class="text-uppercase mb-4">Mercedes Benz R3</h4>
-                        <div class="d-flex justify-content-center mb-4">
-                            <div class="px-2">
-                                <i class="fa fa-car text-primary mr-1"></i>
-                                <span>2015</span>
-                            </div>
-                            <div class="px-2 border-left border-right">
-                                <i class="fa fa-cogs text-primary mr-1"></i>
-                                <span>AUTO</span>
-                            </div>
-                            <div class="px-2">
-                                <i class="fa fa-road text-primary mr-1"></i>
-                                <span>25K</span>
-                            </div>
-                        </div>
-                        <a class="btn btn-primary px-3" href="">$99.00/Day</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-2">
-                    <div class="rent-item mb-4">
-                        <img class="img-fluid mb-4" src="/static/img/car-rent-5.png" alt="">
-                        <h4 class="text-uppercase mb-4">Mercedes Benz R3</h4>
-                        <div class="d-flex justify-content-center mb-4">
-                            <div class="px-2">
-                                <i class="fa fa-car text-primary mr-1"></i>
-                                <span>2015</span>
-                            </div>
-                            <div class="px-2 border-left border-right">
-                                <i class="fa fa-cogs text-primary mr-1"></i>
-                                <span>AUTO</span>
-                            </div>
-                            <div class="px-2">
-                                <i class="fa fa-road text-primary mr-1"></i>
-                                <span>25K</span>
-                            </div>
-                        </div>
-                        <a class="btn btn-primary px-3" href="">$99.00/Day</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-2">
-                    <div class="rent-item mb-4">
-                        <img class="img-fluid mb-4" src="/static/img/car-rent-6.png" alt="">
-                        <h4 class="text-uppercase mb-4">Mercedes Benz R3</h4>
-                        <div class="d-flex justify-content-center mb-4">
-                            <div class="px-2">
-                                <i class="fa fa-car text-primary mr-1"></i>
-                                <span>2015</span>
-                            </div>
-                            <div class="px-2 border-left border-right">
-                                <i class="fa fa-cogs text-primary mr-1"></i>
-                                <span>AUTO</span>
-                            </div>
-                            <div class="px-2">
-                                <i class="fa fa-road text-primary mr-1"></i>
-                                <span>25K</span>
-                            </div>
-                        </div>
-                        <a class="btn btn-primary px-3" href="">$99.00/Day</a>
-                    </div>
-                </div>
+                    {% endfor %}
             </div>
         </div>
     </div>
@@ -381,7 +271,7 @@
 
 
     <!-- Testimonial Start -->
-    <div class="container-fluid py-5">
+    <!--<div class="container-fluid py-5">
         <div class="container py-5">
             <h1 class="display-1 text-primary text-center">03</h1>
             <h1 class="display-4 text-uppercase text-center mb-5">Our Client's Say</h1>
@@ -424,14 +314,14 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     <!-- Testimonial End -->
 
 
     <!-- Contact Start -->
     <div class="container-fluid py-5">
         <div class="container pt-5 pb-3">
-            <h1 class="display-1 text-primary text-center">04</h1>
+           <!-- <h1 class="display-1 text-primary text-center">03</h1>-->
             <h1 class="display-4 text-uppercase text-center mb-5">Contact Us</h1>
             <div class="row">
                 <div class="col-lg-7 mb-2">
@@ -496,36 +386,7 @@
 
 
     <!-- Vendor Start -->
-    <div class="container-fluid py-5">
-        <div class="container py-5">
-            <div class="owl-carousel vendor-carousel">
-                <div class="bg-light p-4">
-                    <img src="/static/img/vendor-1.png" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="/static/img/vendor-2.png" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="/static/img/vendor-3.png" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="/static/img/vendor-4.png" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="/static/img/vendor-5.png" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="/static/img/vendor-6.png" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="/static/img/vendor-7.png" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="/static/img/vendor-8.png" alt="">
-                </div>
-            </div>
-        </div>
-    </div>
+
     <!-- Vendor End -->
 
 

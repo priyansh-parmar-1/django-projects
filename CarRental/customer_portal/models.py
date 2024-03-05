@@ -112,7 +112,7 @@ class Car(models.Model):
     registration_no = models.CharField(max_length=10)
     car_image = models.CharField(max_length=200)
     model_year = models.IntegerField()
-    transmission = models.IntegerField()
+    is_manual = models.IntegerField()
     mileage = models.IntegerField()
     fuel_type = models.IntegerField()
     car_type = models.CharField(max_length=20)
@@ -152,6 +152,10 @@ class Customer(models.Model):
         db_table = 'customer'
     def __str__(self):
         return self.name
+
+    def isExist(self):
+        return Customer.objects.filter(email=self.email).exists()
+
 
 
 class DjangoAdminLog(models.Model):
