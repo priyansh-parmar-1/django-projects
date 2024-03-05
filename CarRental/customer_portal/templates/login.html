@@ -143,10 +143,10 @@ button{
         <h3>Login Here</h3>
         {% csrf_token %} 
         <label for="username">Email</label>
-        <input type="email" placeholder="Enter Email" id="username" name="username" value="{{uname}}">
+        <input type="email" placeholder="Enter Email" id="username" name="username" value="{{uname}}" required>
 
         <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password" name="pass" value="{{pass1}}">
+        <input type="password" placeholder="Password" id="password" name="pass" value="{{pass1}}" required>
 
         <button type="submit">Log In</button>
         <br><br><h4 style='color: red;'>{{msg}}</h4><br>

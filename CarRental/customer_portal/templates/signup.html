@@ -51,7 +51,7 @@ body{
     bottom: -80px;
 }
 form{
-    height: 965px;
+    height: 1557px;
     width: 450px;
     background-color: rgba(255,255,255,0.13);
 <!--    position: absolute;-->
@@ -79,6 +79,12 @@ form h3{
     font-weight: 500;
     line-height: 42px;
     text-align: center;
+    margin-bottom:45px;
+    text-decoration: underline;
+        text-decoration-color: white; /* Set the color of the underline */
+    text-decoration-thickness: 3px; /* Set the thickness of the underline */
+    text-underline-offset: 5px;
+
 }
 
 label{
@@ -102,7 +108,8 @@ input{
     color: #e5e5e5;
 }
 button{
-    margin-top: 14px;
+    margin-top: 32px;
+    margin-bottom:34px;
     width: 100%;
     background-color: #ffffff;
     color: #080710;
@@ -135,6 +142,61 @@ button{
   margin-right: 4px;
 }
 
+
+.social .fb{
+  margin-left: 25px;
+}
+.social i{
+  margin-right: 4px;
+}
+
+/* Custom styling for file input */
+.form-group .file-upload-container {
+    position: relative;
+    margin-top:-25px;
+}
+
+.form-group .file-upload-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+.form-group .file-upload-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.07);
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.form-group .file-upload-label:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+        .file-preview {
+    display: none;
+    margin-top: 10px;
+}
+
+.file-preview img {
+    width: 150px; /* Set width */
+    height: 150px; /* Set height */
+    object-fit: cover; /* Preserve aspect ratio */
+    border-radius: 5px;
+}
+
+        .signup-line {
+    width: 50%;
+    margin: 0 auto;
+    border-color: #ffffff;
+}
+
+
     </style>
 </head>
 <body>
@@ -143,39 +205,121 @@ button{
         <div class="shape"></div>
     </div>
 
-    <form action="" method="post" enctype="multipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
         {% csrf_token %}
         <h3>Signup Here</h3>
 
+        <hr>
+
+
+<!--        new added-->
+            <div class="form-group">
         <label for="cust_image">Upload Your Image</label>
-        <input type="file" name="cust_image" id="cust_image">
+        <div class="file-upload-container">
+            <input type="file" name="cust_image" id="cust_image" class="file-upload-input" required
+                   onchange="previewImage(event)">
+            <label for="cust_image" class="file-upload-label">Choose File</label>
+        </div>
+        <div class="file-preview" id="image-preview"></div>
+    </div>
+
+<!--        end new added-->
+
 
         <label for="username">Full name</label>
-        <input type="text" placeholder="Enter full name" name="username" id="username">
+        <input type="text" placeholder="Enter full name" name="username" id="username" required minlength="5" maxlength="100">
 
         <label for="email">Email</label>
-        <input type="email" placeholder="Enter email" name="email" id="email">
+        <input type="email" placeholder="Enter email" name="email" id="email" required>
 
         <label for="phone">Phone Number</label>
-        <input type="number" placeholder="Enter Phone Number" name="phone" id="phone">
+        <input type="number" placeholder="Enter Phone Number" name="phone"  pattern="[0-9]{10}" id="phone" required>
 
         <label for="dl">Driving Licence No</label>
-        <input type="number" placeholder="Enter Driving Licence No" name="dl" id="dl">
+        <input type="text" placeholder="KA-2018-230895-1234" name="dl" id="dl"   required>
+
 
         <label for="address">Address</label>
-        <input type="text" placeholder="Your Address" name="address" id="address">
+        <input type="text" placeholder="Your Address" name="address" id="address" required>
 
-        <label for="dl_image">Upload Driving Licence Image</label>
-        <input type="file" placeholder="" name="dl_image" id="dl_image" accept="img">
+<!--        <label for="dl_image">Upload Driving Licence Image</label>-->
+<!--        <input type="file" placeholder="" name="dl_image" id="dl_image" accept="img" required>-->
+<div class="form-group">
+    <label for="dl_image">Upload Driving Licence</label>
+    <div class="file-upload-container">
+        <input type="file" name="dl_image" id="dl_image" accept="image/*" class="file-upload-input" required onchange="previewImage(event)">
+        <label for="dl_image" class="file-upload-label">Choose File</label>
+    </div>
+    <div class="file-preview" id="image-preview"></div>
+</div>
+
+
 
         <label for="password1">Password</label>
-        <input type="password" placeholder="Password" id="password1" name="password1">
+        <input type="password" placeholder="Password" id="password1" name="password1"  minlength="8" maxlength="50" required>
 
         <label for="password2">Confirm Password</label>
-        <input type="password" placeholder="Confirm Password" id="password2" name="password2">
+        <input type="password" placeholder="Confirm Password" id="password2" name="password2" required>
         <button type="submit">Signup</button>
 
         <a href="{% url 'login' %}" >already have an account?</a>
     </form>
+
+
+<script>
+    function validateForm() {
+        var phoneRegex = /^\d{10}$/;
+        var phoneInput = document.getElementById('phone');
+        if (!phoneRegex.test(phoneInput.value)) {
+            alert("Please enter a valid 10-digit phone number");
+            phoneInput.focus();
+            return false;
+        }
+
+        var dlRegex = /^[A-Z]{2}-\d{4}-\d{6}-\d{4}$/;
+        var dlInput = document.getElementById('dl');
+        console.log("DL Input Value:", dlInput.value);
+        if (!dlRegex.test(dlInput.value)) {
+            alert("Please enter a valid driving license number in the format KA-2018-230895-1234");
+            dlInput.focus();
+            return false;
+        }
+
+        var password1 = document.getElementById('password1').value;
+        var password2 = document.getElementById('password2').value;
+        if (password1 !== password2) {
+            alert("Passwords do not match");
+            document.getElementById('password2').focus();
+            return false;
+        }
+
+        return true;
+    }
+
+
+<!--    js for image-->
+    function previewImage(event) {
+        var input = event.target;
+        var preview = input.parentElement.nextElementSibling;
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(input.files[0]);
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+
+</script>
+
+
 </body>
 </html>
