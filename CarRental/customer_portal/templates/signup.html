@@ -143,35 +143,33 @@ button{
         <div class="shape"></div>
     </div>
 
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <h3>Signup Here</h3>
 
         <label for="cust_image">Upload Your Image</label>
         <input type="file" name="cust_image" id="cust_image">
 
-
-        <label for="fullname">Full name</label>
-        <input type="text" placeholder="Enter full name" name="fullname" id="fullname">
+        <label for="username">Full name</label>
+        <input type="text" placeholder="Enter full name" name="username" id="username">
 
         <label for="email">Email</label>
         <input type="email" placeholder="Enter email" name="email" id="email">
 
-        <label for="email">Driving Licence No</label>
-        <input type="number" placeholder="Enter Driving Licence No" name="email" id="dl">
+        <label for="phone">Phone Number</label>
+        <input type="number" placeholder="Enter Phone Number" name="phone" id="phone">
 
+        <label for="dl">Driving Licence No</label>
+        <input type="number" placeholder="Enter Driving Licence No" name="dl" id="dl">
 
-        <label for="email">Address</label>
-        <input type="email" placeholder="Your Address" name="address" id="address">
+        <label for="address">Address</label>
+        <input type="text" placeholder="Your Address" name="address" id="address">
 
         <label for="dl_image">Upload Driving Licence Image</label>
-        <input type="file" placeholder="" name="dl_image" id="dl_image">
-
+        <input type="file" placeholder="" name="dl_image" id="dl_image" accept="img">
 
         <label for="password1">Password</label>
         <input type="password" placeholder="Password" id="password1" name="password1">
-
-
 
         <label for="password2">Confirm Password</label>
         <input type="password" placeholder="Confirm Password" id="password2" name="password2">
