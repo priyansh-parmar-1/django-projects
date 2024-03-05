@@ -52,7 +52,7 @@ def signup(requst):
         uname = requst.POST.get('username')
         email = requst.POST.get('email')
         pass1 = requst.POST.get('password1')
-        new_cust = User.objects.create_user(uname, email, pass1)
+        new_cust = Customer(name=uname, email=email, password= pass1, is_verified=1)
         new_cust.save()
         print('user created')
         return redirect('login')

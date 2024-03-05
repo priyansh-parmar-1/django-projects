@@ -1,5 +1,5 @@
 from django.contrib import admin
 from . import models
 # Register your models here.
-admin.register(models.Customer)
-admin.register(models.Booking)
+admin.site.register(models.Customer)
+admin.site.register(models.Booking)
