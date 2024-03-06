@@ -2,7 +2,7 @@
 {% block content %}
 {% load static %}
 {% static "img" as baseUrl %}
-
+{% csrf_token %}
     <!-- Search Start -->
     <div class="container-fluid bg-white pt-3 px-lg-5">
         <div class="row mx-n2">
