@@ -9,11 +9,8 @@ from django.http import HttpResponse
 
 def home(request):
     car = Car.objects.all()
-    #if request.session.get('cust_id') == 0:
-        #request.session['cust_id'] = 0
-        #request.session['cust_email'] = ''
-
-    return render(request, 'index.html', {'cars': car})
+    cust_id =request.session.get('cust_id')
+    return render(request, 'index.html', {'cars': car, 'cust_id': cust_id})
 
 
 def login(request):
@@ -24,8 +21,8 @@ def login(request):
             cust_obj = Customer.objects.get(email=uname)
             if cust_obj.email == uname:
                 if cust_obj.password == pass1:
-                    #request.session['cust_id'] = cust_obj.cust_id
-                    #request.session['cust_email'] = cust_obj.email
+                    request.session['cust_id'] = cust_obj.cust_id
+                    request.session['cust_email'] = cust_obj.email
                     return redirect('home')
                 else:
                     return render(request, 'login.html', {'msg': "Email or password incorrect", "uname": uname, "pass1": pass1})
