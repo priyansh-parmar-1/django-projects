@@ -236,7 +236,7 @@ button{
         <input type="number" placeholder="Enter Phone Number" name="phone"  pattern="[0-9]{10}" id="phone" required>
 
         <label for="dl">Driving Licence No</label>
-        <input type="text" placeholder="KA-2018-230895-1234" name="dl" id="dl"   required>
+        <input type="text" placeholder="GJ-2018-230895-1234" name="dl" id="dl"   required>
 
 
         <label for="address">Address</label>
@@ -256,10 +256,10 @@ button{
 
 
         <label for="password1">Password</label>
-        <input type="password" placeholder="Password" id="password1" name="password1"  minlength="8" maxlength="50" required>
+        <input type="password" placeholder="Password" id="password1" name="password1"  minlength="8" maxlength="16" required>
 
         <label for="password2">Confirm Password</label>
-        <input type="password" placeholder="Confirm Password" id="password2" name="password2" required>
+        <input type="password" placeholder="Confirm Password" id="password2" name="password2" minlength="8" maxlength="16" required>
         <button type="submit">Signup</button>
 
         <a href="{% url 'login' %}" >already have an account?</a>
