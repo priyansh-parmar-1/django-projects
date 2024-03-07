@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as user_login, logout as user_logout
 from .models import *
 from django.http import HttpResponse
+from .models import Customer
+import re  # Import regular expression module
+from django.contrib import messages
+
 
 
 # Create your views here.
@@ -31,10 +35,17 @@ def login(request):
     return render(request, 'login.html')
 
 
+
 def signup(request):
     if request.method == 'POST':
-        uname = request.POST.get('username')
         email = request.POST.get('email')
+        try:
+            cust_obj = Customer.objects.get(email=email)
+            if cust_obj.email == email:
+                return render(request, 'signup.html', {'msg': "Email already exist"})
+        except:
+            pass
+        uname = request.POST.get('username')
         pass1 = request.POST.get('password1')
         phone = request.POST.get('phone')
         dl_no = request.POST.get('dl')
@@ -46,7 +57,6 @@ def signup(request):
         print('user created')
         return redirect('login')
     return render(request, 'signup.html')
-
 
 def logout(request):
     user_logout(request)
