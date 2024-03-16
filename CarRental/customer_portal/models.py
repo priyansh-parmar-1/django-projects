@@ -110,7 +110,7 @@ class Car(models.Model):
     car_id = models.AutoField(primary_key=True)
     company_id = models.IntegerField()
     registration_no = models.CharField(max_length=10)
-    car_image = models.CharField(max_length=200)
+    car_image = models.ImageField(upload_to='img/')
     model_year = models.IntegerField()
     is_manual = models.IntegerField()
     mileage = models.IntegerField()

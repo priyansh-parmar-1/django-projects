@@ -1,7 +1,6 @@
 {% extends 'masterpage.html' %}
 {% block content %}
 {% load static %}
-{% static "img" as baseUrl %}
 {% csrf_token %}
     <!-- Search Start -->
     <div class="container-fluid bg-white pt-3 px-lg-5">
@@ -142,7 +141,7 @@
                 <div class="col-lg-4 col-md-6 mb-2">
 
                     <div class="rent-item mb-4">
-                        <img class="img-fluid mb-4" src='{{baseUrl}}/{{car.car_image}}' alt="">
+                        <img class="img-fluid mb-4" src="{{car.car_image.url}}" alt="">
                         <h4 class="text-uppercase mb-4">{{ car.model_name }}</h4>
                         <div class="d-flex justify-content-center mb-4">
                             <div class="px-2">

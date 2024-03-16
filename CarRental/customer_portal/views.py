@@ -58,6 +58,29 @@ def signup(request):
         return redirect('login')
     return render(request, 'signup.html')
 
+
+# adding code for forgot password
+# def changePassword(request):
+#     return render(request,'change-password.html')
+
+# def ForgetPassword(request):
+#     try:
+#         if request.method == 'POST':
+#             uname=request.POST.get('username')
+
+#             if not  Customer.objects.get(email=uname).first():
+#                 messages.success(request,'No User Found with this username')
+#                 return redirect('/forget-password')
+            
+#             cust_obj=Customer.objects.get(email=uname)
+
+             
+
+#     except Exception as e:
+#         print(e)
+#     return render(request,'forget-password.html')
+
+
 def logout(request):
     user_logout(request)
     return redirect('home')
