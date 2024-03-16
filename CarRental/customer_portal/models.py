@@ -13,12 +13,15 @@ from django.db import models
 
 
 class Area(models.Model):
+    id = models.IntegerField(primary_key=True)
     pincode = models.IntegerField()
     area_name = models.CharField(max_length=45)
 
     class Meta:
         managed = False
         db_table = 'area'
+    def __str__(self):
+        return self.area_name
 
 
 class AuthGroup(models.Model):
@@ -104,7 +107,8 @@ class Booking(models.Model):
     class Meta:
         managed = False
         db_table = 'booking'
-
+    def __str__(self):
+        return self.booking_id
 
 class Car(models.Model):
     car_id = models.AutoField(primary_key=True)
@@ -124,7 +128,8 @@ class Car(models.Model):
     class Meta:
         managed = False
         db_table = 'car'
-
+    def __str__(self):
+        return self.model_name
 
 class Company(models.Model):
     company_id = models.AutoField(primary_key=True)
@@ -133,7 +138,8 @@ class Company(models.Model):
     class Meta:
         managed = False
         db_table = 'company'
-
+    def __str__(self):
+        return self.company_name
 
 class Customer(models.Model):
     cust_id = models.AutoField(primary_key=True)
@@ -201,3 +207,30 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+class Feedback(models.Model):
+    feedback_id = models.AutoField(primary_key=True)
+    cust = models.ForeignKey(Customer, models.DO_NOTHING)
+    car = models.ForeignKey(Car, models.DO_NOTHING)
+    description = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'feedback'
+    def __str__(self):
+        return self.description
+
+
+class Payment(models.Model):
+    payment_id = models.AutoField(primary_key=True)
+    booking = models.ForeignKey(Booking, models.DO_NOTHING)
+    cust = models.ForeignKey(Customer, models.DO_NOTHING)
+    transaction = models.IntegerField()
+    status = models.IntegerField()
+    payment_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'payment'
+    def __str__(self):
+        return self.payment_id
