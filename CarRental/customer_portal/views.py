@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from .models import Customer
 import re  # Import regular expression module
 from django.contrib import messages
-
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Create your views here.
@@ -124,4 +125,14 @@ def profile(request):
         cust_obj = Customer.objects.get(cust_id=cust_id)
     return render(request, 'profile.html', {'cust': cust_obj, 'cust_id': cust_id})
 
+
+
+def forgotPassword(request):
+    if request.method == 'POST':
+        message = "hello from car castle"
+        email = request.POST['email']
+        send_mail('Contact Form', message, 'settings.EMAIL_HOST_USER',
+                  [email], fail_silently = False)
+        return render(request, 'forgotPassword.html',{'msg': 'We have sent you email to change password'})
+    return render(request ,'forgotPassword.html')
 

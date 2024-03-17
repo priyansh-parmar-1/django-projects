@@ -13,8 +13,7 @@ from django.db import models
 
 
 class Area(models.Model):
-    id = models.IntegerField(primary_key=True)
-    pincode = models.IntegerField()
+    pincode = models.IntegerField(primary_key=True)
     area_name = models.CharField(max_length=45)
 
     class Meta:

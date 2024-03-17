@@ -52,6 +52,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'CarRental.urls'
 
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mahima.carcastle@gmail.com'
+EMAIL_HOST_PASSWORD ='bdfh jvvs lyop ljer'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+ALLOWED_HOSTS = []
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

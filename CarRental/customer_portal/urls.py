@@ -31,6 +31,7 @@ urlpatterns = [
     path('profile/',profile, name='profile'),
     path('cars/<car_id>/', carDetails, name='carDetails'),
     path('booking/', booking, name='booking'),
+    path('forgotPassword/', forgotPassword, name='forgotPassword'),
 
 ]
 if settings.DEBUG:
