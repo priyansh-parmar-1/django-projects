@@ -38,7 +38,7 @@ def login(request):
                            Please varify your email address by entering opt: """ + str(otp) + """ in verifation form."""
                     send_mail('Email varification OTP', message, 'settings.EMAIL_HOST_USER',
                               [uname], fail_silently=False)
-                    return render(request, 'verifyotp.html', {'email': email})
+                    return render(request, 'verifyotp.html', {'email':uname})
                 elif cust_obj.password == pass1:
                     request.session['cust_id'] = cust_obj.cust_id
                     request.session['cust_email'] = cust_obj.email
@@ -114,7 +114,7 @@ def cars(request):
 
 def carDetails(request, car_id):
     car = get_object_or_404(Car, pk=car_id)
-<<<<<<< HEAD
+
     msg = request.session.pop('feedback_success_msg', None)
     feedback_list = Feedback.objects.filter(car_id=car_id)
 
@@ -132,8 +132,6 @@ def carDetails(request, car_id):
 
 def booking(request):
     car = Car.objects.all()
-=======
->>>>>>> ccd73483d9cb53be82c1d70b37e204725124822a
     cust_id = request.session.get('cust_id')
     return render(request, 'carDetails.html', {'cars': [car], 'cust_id': cust_id})
 
