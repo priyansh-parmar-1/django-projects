@@ -51,8 +51,6 @@ body{
     bottom: -80px;
 }
 form{
-    height: 520px;
-    width: 400px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;
     transform: translate(-50%,-50%);
@@ -140,27 +138,13 @@ button{
         <div class="shape"></div>
     </div>
     <form method="post">
-        <h3>Login Here</h3>
+        <h3>Verify OTP</h3>
         {% csrf_token %} 
-        <label for="username">Email</label>
-        <input type="email" placeholder="Enter Email" id="username" name="username" value="{{uname}}" required>
-
-        <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password" name="pass" value="{{pass1}}" required>
-
-        <button type="submit">Log In</button>
-         {% if isError == 1 %}
+        <label for="otp">OTP</label>
+        <input type="number" placeholder="enter otp here" id="otp" name="otp" required>
+        <input type="hidden" id="email" name="email" value="{{email}}">
+        <button type="submit">Verify</button>
         <br><br><h4 style='color: red;'>{{msg}}</h4><br>
-        {% else %}
-        <br><br><h4 style='color: green;'>{{msg}}</h4><br>
-        {% endif %}
-        <!-- <input type="button" value=""> -->
-        <!-- <div class="social">
-          <div class="go"><i class="fab fa-google"></i>  Google</div>
-          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
-        </div> -->
-        <a href="{% url 'forgotPassword' %}" >Forgot password?</a><br>
-        <a href="{% url 'signup' %}" >Create an account</a>
     </form>
 </body>
 </html>
