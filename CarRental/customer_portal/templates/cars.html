@@ -1,0 +1,44 @@
+{% extends 'masterpage.html' %}
+{% block content %}
+{% load static %}
+
+ <!-- Rent A Car Start -->
+ <div class="container-fluid py-5">
+    <div class="container pt-5 pb-3">
+       <!-- <h1 class="display-1 text-primary text-center">02</h1>-->
+        <h1 class="display-4 text-uppercase text-center mb-5">Find Your Car</h1>
+        <div class="row">
+            {% for car in cars %}
+            <div class="col-lg-4 col-md-6 mb-2">
+
+                <div class="rent-item mb-4">
+                    <img class="img-fluid mb-4" src="{{car.car_image.url}}" alt="">
+                    <h4 class="text-uppercase mb-4">{{ car.model_name }}</h4>
+                    <div class="d-flex justify-content-center mb-4">
+                        <div class="px-2">
+                            <i class="fa fa-car text-primary mr-1"></i>
+                            <span>{{ car.model_year }}</span>
+                        </div>
+                        <div class="px-2 border-left ">
+                            <i class="fa fa-cogs text-primary mr-1"></i>
+                            {% if car.is_manual == 0 %}
+                            <span>AUTO</span>
+                            {% else %}
+                            <span>MANUAL</span>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    {% comment %} <a class="btn btn-primary px-3" href="/carDetails">{{ car.charge }}/hour</a> {% endcomment %}
+                    <a class="btn btn-primary px-3" href="{% url 'carDetails' car.car_id %}">Rs. {{ car.charge }}/hour</a>
+                    
+                </div>
+            </div>
+                {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Rent A Car End -->
+
+
+{% endblock %}

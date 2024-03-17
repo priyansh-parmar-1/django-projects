@@ -1,0 +1,131 @@
+{% extends 'masterpage.html' %}
+{% block content %}
+{% load static %}   
+
+<style>
+
+    .car-image img {
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.23);
+        height: 400px;
+        margin-top:-19px;
+    }
+    
+    .table-3d {
+        border-collapse: collapse;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .table-3d th, .table-3d td {
+        border: 1px solid transparent;
+    }
+    
+    .table-3d th {
+        background-color: #f5f5f5;
+    }
+    
+    .table-3d th,
+    .table-3d td {
+        transition: all 0.3s ease;
+    }
+    
+    .table-3d th:hover,
+    .table-3d td:hover {
+        background-color: rgba(247, 125, 10, 0.1);
+        transform: translate(0, -2px);
+    }
+
+    .icon-column {
+        width: 50px;
+        text-align: center;
+    }
+
+    .icon-column i {
+        font-size: 20px;
+    }
+</style>
+    
+<!-- Detail Start -->
+
+<div class="container-fluid pt-5">
+    <h1 class="display-4 text-uppercase text-center mb-5">Car Details</h1>
+    {% for car_item in cars %}
+    
+    <div class="container pt-5 pb-3">
+    <h1 class="display-4 text-uppercase mb-5">{{ car_item.model_name }}</h1>
+       {% comment %} <center> <h1 class="display-4 text-uppercase mb-5">{{ car_item.model_name }}</h1></center> {% endcomment %}
+        <div class="row align-items-center">
+            
+            <!-- Image Column -->
+            <div class="col-lg-6 mb-4 car-image">
+                <img class="img-fluid" src="{{ car_item.car_image.url }}" alt="">
+            </div>
+            <!-- Table Column -->
+            <div class="col-lg-6 mb-4">
+                <table class="table table-bordered table-3d">
+                    <tbody>
+                        <tr>
+                            <td class="icon-column"><i class="fas fa-car"></i></td>
+                            <td><b>Model:</b></td>
+                            <td>{{ car_item.model_name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-column"><i class="fas fa-money-bill-wave"></i></td>
+                            <td><b>Charge per Hour:</b></td>
+                            <td>Rs. {{ car_item.charge }}</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-column"><i class="fas fa-cogs"></i></td>
+                            <td><b>Transmission:</b></td>
+                            <td>{% if car_item.is_manual == 0 %}AUTO{% else %}MANUAL{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-column"><i class="fas fa-gas-pump"></i></td>
+                            <td><b>Mileage:</b></td>
+                            <td>{{ car_item.mileage }} km/liter</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-column"><i class="fas fa-gas-pump"></i></td>
+                            <td><b>Fuel Type:</b></td>
+                            <td>{{ car_item.fuel_type }}</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-column"><i class="fas fa-car"></i></td>
+                            <td><b>Car Type:</b></td>
+                            <td>{{ car_item.car_type }}</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-column"><i class="fas fa-users"></i></td>
+                            <td><b>Capacity:</b></td>
+                            <td>{{ car_item.capacity }}</td>
+                        </tr>
+                        <tr>
+                            <td class="icon-column"><i class="fas fa-palette"></i></td>
+                            <td><b>Color:</b></td>
+                            <td>{{ car_item.color }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% comment %} <div class="row">
+            <div class="col-lg-12">
+                <p>Tempor erat elitr at rebum at at clita aliquyam consetetur. Diam dolor diam ipsum et, tempor voluptua sit consetetur sit. Aliquyam diam amet diam et eos sadipscing labore. Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo et tempor consetetur takimata eirmod, dolores takimata consetetur invidunt</p>
+                <div class="d-flex pt-1">
+                    <h6>Share on:</h6>
+                    <div class="d-inline-flex">
+                        <a class="px-2" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="px-2" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="px-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                        <a class="px-2" href=""><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> {% endcomment %}
+    {% endfor %}
+  <center>  <a href="" class="btn btn-primary py-md-3 px-md-5 mt-2">Book Now</a></center>
+</div>
+<!-- Detail End -->
+
+{% endblock %}
