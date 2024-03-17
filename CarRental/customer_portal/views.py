@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as user_login, logout as user_logout
 from .models import *
@@ -85,8 +85,20 @@ def logout(request):
     user_logout(request)
     return redirect('home')
 
+def cars(request):
+    car = Car.objects.all()
+    return render(request, 'cars.html', {'cars': car})
+
+
+def carDetails(request, car_id):
+    car = get_object_or_404(Car, pk=car_id)
+    return render(request, 'carDetails.html', {'cars': [car]})
+
+
 
 def booking(request):
     car = Car.objects.all()
     cust_id = request.session.get('cust_id')
     return render(request,'booking.html', {'cars': car, 'cust_id': cust_id})
+
+
