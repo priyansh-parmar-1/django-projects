@@ -28,17 +28,26 @@ def login(request):
             uname = request.POST.get('username')
             pass1 = request.POST.get('pass')
             cust_obj = Customer.objects.get(email=uname)
-            if cust_obj.email == uname:
-                if cust_obj.password == pass1:
+            if cust_obj:
+                cust_otp = Customer.objects.get(email=uname,otp=0)
+                if not cust_otp:
+                    otp = int(''.join(random.choices(string.digits, k=6)))
+                    cust_obj.otp = otp
+                    cust_obj.save()
+                    message = """Thank you 🙏 for choosing CAR CASTLE. 
+                           Please varify your email address by entering opt: """ + str(otp) + """ in verifation form."""
+                    send_mail('Email varification OTP', message, 'settings.EMAIL_HOST_USER',
+                              [uname], fail_silently=False)
+                    return render(request, 'verifyotp.html', {'email': email})
+                elif cust_obj.password == pass1:
                     request.session['cust_id'] = cust_obj.cust_id
                     request.session['cust_email'] = cust_obj.email
                     return redirect('home')
                 else:
-                    return render(request, 'login.html', {'msg': "Email or password incorrect", "uname": uname, "pass1": pass1})
+                    return render(request, 'login.html', {'msg': "Email or password incorrect",'isError':1, "uname": uname, "pass1": pass1})
     except Customer.DoesNotExist:
-        return render(request, 'login.html', {'msg': "Customer does not exist", "uname": uname, "pass1": pass1})
+        return render(request, 'login.html', {'msg': "Customer does not exist",'isError':1, "uname": uname, "pass1": pass1})
     return render(request, 'login.html')
-
 
 
 def signup(request):
@@ -50,6 +59,7 @@ def signup(request):
                 return render(request, 'signup.html', {'msg': "Email already exist"})
         except:
             pass
+        otp = int(''.join(random.choices(string.digits, k=6)))
         uname = request.POST.get('username')
         pass1 = request.POST.get('password1')
         phone = request.POST.get('phone')
@@ -57,11 +67,28 @@ def signup(request):
         add = request.POST.get('address')
         dl_image = request.FILES.get('dl_image')
         cust_image = request.FILES.get('cust_image')
-        new_cust = Customer(name=uname, email=email, password=pass1, is_verified=0, phone_no=phone, dl_no=dl_no, address=add, dl_image=dl_image, cust_image=cust_image)
+        message = """Thank you 🙏 for choosing CAR CASTLE. 
+        Please varify your email address by entering opt: """ + str(otp) + """ in verifation form."""
+        send_mail('Email varification OTP', message, 'settings.EMAIL_HOST_USER',
+                  [email], fail_silently = False)
+        new_cust = Customer(name=uname, email=email, password=pass1, is_verified=0, otp=otp, phone_no=phone, dl_no=dl_no, address=add, dl_image=dl_image, cust_image=cust_image)
         new_cust.save()
-        print('user created')
-        return redirect('login')
+        return render(request, 'verifyotp.html', {'email': email})
     return render(request, 'signup.html')
+
+def verifyotp(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        otp = request.POST.get('otp')
+        if email is not None and email != '':
+            cust_obj = Customer.objects.get(email=email,otp=otp)
+            if cust_obj:
+                cust_obj.otp = 0
+                cust_obj.save()
+                return render(request, 'login.html', {'msg': "OTP verified successfully", 'isError': 0})
+            else:
+                return render(request, 'verifyotp.html', {'msg': "Invalid otp"})
+    return render(request, 'verifyotp.html')
 
 
 # adding code for forgot password
@@ -81,11 +108,13 @@ def logout(request):
 
 def cars(request):
     car = Car.objects.all()
-    return render(request, 'cars.html', {'cars': car})
+    cust_id = request.session.get('cust_id')
+    return render(request, 'cars.html', {'cars': car, 'cust_id': cust_id})
 
 
 def carDetails(request, car_id):
     car = get_object_or_404(Car, pk=car_id)
+<<<<<<< HEAD
     msg = request.session.pop('feedback_success_msg', None)
     feedback_list = Feedback.objects.filter(car_id=car_id)
 
@@ -103,8 +132,15 @@ def carDetails(request, car_id):
 
 def booking(request):
     car = Car.objects.all()
+=======
+>>>>>>> ccd73483d9cb53be82c1d70b37e204725124822a
     cust_id = request.session.get('cust_id')
-    return render(request,'booking.html', {'cars': car, 'cust_id': cust_id})
+    return render(request, 'carDetails.html', {'cars': [car], 'cust_id': cust_id})
+
+def booking(request, car_id):
+    car = get_object_or_404(Car, pk=car_id)
+    cust_id = request.session.get('cust_id')
+    return render(request,'booking.html', {'cars': [car], 'cust_id': cust_id})
 
 def profile(request):
     cust_id =request.session.get('cust_id')
@@ -138,8 +174,9 @@ def forgotPassword(request):
             cust_obj = Customer.objects.get(email=email)
             if cust_obj.cust_id == 0:
                 return render(request, 'forgotPassword.html',{'msg': 'Please enter correct email, user not found with given email address'})
-        except:
-            pass
+        except :
+            return render(request, 'forgotPassword.html',{'msg': """Please enter correct email, 
+            user not found with given email address"""})
 
         email = request.POST['email']
         all_characters = string.ascii_letters + string.digits

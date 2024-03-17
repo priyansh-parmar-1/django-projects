@@ -29,9 +29,15 @@ urlpatterns = [
     path('logout/',logout, name='logout'),
     path('cars/',cars,name='cars'),
     path('profile/',profile, name='profile'),
+<<<<<<< HEAD
     path('cars/<car_id>/', carDetails, name='carDetails'), 
     path('booking/', booking, name='booking'),
     path('submit_feedback/',submit_feedback, name='submit_feedback'),
+=======
+    path('cars/<car_id>/', carDetails, name='carDetails'),
+    path('booking/<car_id>/', booking, name='booking'),
+    path('verifyotp', verifyotp, name='verifyotp'),
+>>>>>>> ccd73483d9cb53be82c1d70b37e204725124822a
     path('forgotPassword/', forgotPassword, name='forgotPassword'),
 
 ]

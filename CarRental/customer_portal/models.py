@@ -150,6 +150,7 @@ class Customer(models.Model):
     password = models.CharField(max_length=16)
     dl_image = models.ImageField(upload_to='dl_img/')
     is_verified = models.IntegerField()
+    otp = models.IntegerField()
     cust_image = models.ImageField(upload_to='cust_img/')
 
     class Meta:

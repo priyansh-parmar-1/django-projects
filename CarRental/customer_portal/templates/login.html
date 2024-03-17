@@ -149,7 +149,11 @@ button{
         <input type="password" placeholder="Password" id="password" name="pass" value="{{pass1}}" required>
 
         <button type="submit">Log In</button>
+         {% if isError == 1 %}
         <br><br><h4 style='color: red;'>{{msg}}</h4><br>
+        {% else %}
+        <br><br><h4 style='color: green;'>{{msg}}</h4><br>
+        {% endif %}
         <!-- <input type="button" value=""> -->
         <!-- <div class="social">
           <div class="go"><i class="fab fa-google"></i>  Google</div>
