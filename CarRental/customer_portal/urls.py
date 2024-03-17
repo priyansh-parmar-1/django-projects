@@ -29,8 +29,9 @@ urlpatterns = [
     path('logout/',logout, name='logout'),
     path('cars/',cars,name='cars'),
     path('profile/',profile, name='profile'),
-    path('cars/<car_id>/', carDetails, name='carDetails'),
+    path('cars/<car_id>/', carDetails, name='carDetails'), 
     path('booking/', booking, name='booking'),
+    path('submit_feedback/',submit_feedback, name='submit_feedback'),
     path('forgotPassword/', forgotPassword, name='forgotPassword'),
 
 ]

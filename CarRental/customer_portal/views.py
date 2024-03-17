@@ -10,6 +10,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 import random
 import string
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 
 # Create your views here.
 
@@ -83,7 +86,18 @@ def cars(request):
 
 def carDetails(request, car_id):
     car = get_object_or_404(Car, pk=car_id)
-    return render(request, 'carDetails.html', {'cars': [car]})
+    msg = request.session.pop('feedback_success_msg', None)
+    feedback_list = Feedback.objects.filter(car_id=car_id)
+
+    # Fetching customer names for each feedback
+    feedback_details = []
+    for feedback in feedback_list:
+        customer = Customer.objects.get(cust_id=feedback.cust_id)
+        feedback_details.append({'customer_name': customer.name,'customer_image': customer.cust_image.url, 'feedback_description': feedback.description})
+    
+    return render(request, 'carDetails.html', {'cars': [car], 'msg': msg, 'feedback_details': feedback_details})
+    
+    # return render(request, 'carDetails.html', {'cars': [car],'msg': msg})
 
 
 
@@ -141,3 +155,36 @@ def forgotPassword(request):
         return render(request, 'forgotPassword.html',{'msg': 'We have sent you email to change password'})
     return render(request ,'forgotPassword.html')
 
+
+
+# adding for feedback
+
+
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+def submit_feedback(request):
+    if request.method == 'POST':
+        # Retrieve cust_id from session
+        cust_id = request.session.get('cust_id')
+
+        # Retrieve the car_id and feedback message from the form
+        car_id = request.POST.get('car_id')
+        description = request.POST.get('feedback-message')
+        
+        # Check if cust_id and car_id are available
+        if cust_id and car_id:
+            try:
+                # Create a Feedback object with cust_id, car_id, and description
+                feedback = Feedback.objects.create(cust_id=cust_id, car_id=car_id, description=description)
+                messages.success(request, 'Feedback submitted successfully!')
+            except Exception as e:
+                messages.error(request, f'Error occurred while submitting feedback: {str(e)}')
+        else:
+            messages.error(request, 'Unable to submit feedback. Please log in first.')
+        
+        # Redirect to the car detail page
+        return HttpResponseRedirect(reverse('carDetails', kwargs={'car_id': car_id}) + '?msg=Feedback+submitted+successfully')
+
+    # If request method is not POST, render the car detail page
+    return render(request, 'carDetails.html')

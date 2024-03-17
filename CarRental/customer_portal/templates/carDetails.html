@@ -128,4 +128,67 @@
 </div>
 <!-- Detail End -->
 
+
+
+{% comment %} feedback section starts here  {% endcomment %}
+
+<!-- Car Detail Section (existing code) -->
+
+{% comment %} Feedback Section {% endcomment %}
+<form method="POST" action="{% url 'submit_feedback' %}" class="mt-4">
+    {% csrf_token %}
+    {% for car_item in cars %}
+    <input type="hidden" name="car_id" value="{{ car_item.car_id }}">
+    {% endfor %}
+    <div class="form-group">
+        <label for="feedback-message"> Feedback</label>
+        <textarea class="form-control" id="feedback-message" name="feedback-message" rows="4" placeholder="Enter your feedback"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+
+    {% if request.GET.msg %}
+    <div id="feedback-msg" class="alert alert-success mt-3" role="alert">
+        {{ request.GET.msg }}
+    </div>
+    {% endif %}
+</form>
+
+{% comment %} Feedback ends here {% endcomment %}
+
+<script>
+    // Hide the success message after 5 seconds
+    setTimeout(function() {
+        var feedbackMsg = document.querySelector('.alert-success');
+        if (feedbackMsg) {
+            feedbackMsg.style.display = 'none';
+        }
+    }, 5000); // Adjust the timeout value as needed
+</script>
+
+
+<!-- Feedback Section -->
+<!-- Feedback Section -->
+<div class="container mt-5">
+    <h2 class="mb-4">Feedback from Other Users</h2>
+    {% if feedback_details %}
+        <div class="row">
+            {% for feedback in feedback_details %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{{ feedback.customer_image }}" alt="Customer Image" class="rounded-circle mr-3" style="width: 50px; height: 50px;">
+                                <h5 class="card-title">{{ feedback.customer_name }}</h5>
+                            </div>
+                            <p class="card-text">Feedback: {{ feedback.feedback_description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No feedback available.</p>
+    {% endif %}
+</div>
+
 {% endblock %}
