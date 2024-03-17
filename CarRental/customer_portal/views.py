@@ -84,3 +84,9 @@ def signup(request):
 def logout(request):
     user_logout(request)
     return redirect('home')
+
+
+def booking(request):
+    car = Car.objects.all()
+    cust_id = request.session.get('cust_id')
+    return render(request,'booking.html', {'cars': car, 'cust_id': cust_id})
