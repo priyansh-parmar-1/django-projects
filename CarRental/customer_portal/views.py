@@ -8,7 +8,8 @@ import re  # Import regular expression module
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
-
+import random
+import string
 
 # Create your views here.
 
@@ -64,18 +65,7 @@ def signup(request):
 # def changePassword(request):
 #     return render(request,'change-password.html')
 
-# def ForgetPassword(request):
-#     try:
-#         if request.method == 'POST':
-#             uname=request.POST.get('username')
 
-#             if not  Customer.objects.get(email=uname).first():
-#                 messages.success(request,'No User Found with this username')
-#                 return redirect('/forget-password')
-            
-#             cust_obj=Customer.objects.get(email=uname)
-
-             
 
 #     except Exception as e:
 #         print(e)
@@ -129,8 +119,23 @@ def profile(request):
 
 def forgotPassword(request):
     if request.method == 'POST':
-        message = "hello from car castle"
+        email = request.POST.get('email')
+        try:
+            cust_obj = Customer.objects.get(email=email)
+            if cust_obj.cust_id == 0:
+                return render(request, 'forgotPassword.html',{'msg': 'Please enter correct email, user not found with given email address'})
+        except:
+            pass
+
         email = request.POST['email']
+        all_characters = string.ascii_letters + string.digits
+        password = ''.join(random.choices(all_characters, k=10))
+        message = """Hello from car castle,  
+        Your new generated password is: """ + password
+
+        cust_obj = Customer.objects.get(email=email)
+        cust_obj.password = password
+        cust_obj.save()
         send_mail('Contact Form', message, 'settings.EMAIL_HOST_USER',
                   [email], fail_silently = False)
         return render(request, 'forgotPassword.html',{'msg': 'We have sent you email to change password'})
