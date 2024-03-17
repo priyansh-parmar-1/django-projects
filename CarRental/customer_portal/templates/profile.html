@@ -258,6 +258,10 @@ button{
   background-repeat: no-repeat;
   background-position: center;
 }
+
+.error-message {
+    color: red;
+}
 </style>
 
     <div class="background">
@@ -265,7 +269,7 @@ button{
         <div class="shape"></div>
     </div>
 
-    <form name="detailsForm" action="" method="post" enctype="multipart/form-data" >
+    <form id="myForm" name="detailsForm" action="" method="post" enctype="multipart/form-data" >
         {% csrf_token %}
         <div class="avatar-upload">
             <div class="avatar-edit">
@@ -293,8 +297,13 @@ button{
 
             </div>
             <div class="col-6">
-            <label for="dl">Driving Licence No</label>
+            {% comment %} <label for="dl">Driving Licence No</label>
             <input type="text" placeholder="GJ-2018-230895-1234"  value="{{cust.dl_no}}" name="dl" id="dl" required >
+            <span id="dlError" class="error-message"></span> {% endcomment %}
+
+            <label for="dl">Driving Licence No</label>
+            <input type="text" placeholder="GJ-2018-230895-1234" name="dl" id="dl" value="{{cust.dl_no}}"  required >
+            <span id="dlError" class="error-message" style="color: red;"></span>
 
             </div>
             <div class="col-6">
@@ -351,6 +360,47 @@ button{
 $("#cust_image").change(function() {
     readURL(this);
 });
+
+
+//adding  validation for dl
+// Adding validation for DL
+// Adding validation for DL
+const dlInput = document.getElementById('dl');
+const dlError = document.getElementById('dlError');
+
+dlInput.addEventListener('input', function() {
+  validateDL(dlInput.value);
+});
+
+function validateDL(dl) {
+  {% comment %} const regex = /^GJ-\d{4}-\d{6}-\d+$/; {% endcomment %}
+  const regex = /^GJ-\d{4}-\d{6}-\d+$/;
+  if (!regex.test(dl)) {
+    dlError.textContent = 'Driving License should be in the format GJ-2018-230895-1234';
+    return false;
+  } else {
+    dlError.textContent = '';
+    return true;
+  }
+}
+
+
+// Form submit event handler
+const form = document.getElementById('myForm');
+
+form.addEventListener('submit', function(event) {
+  // Perform DL validation before submitting the form
+  if (!validateDL(dlInput.value)) {
+    event.preventDefault(); // Prevent form submission
+    console.log('Please correct the driving license details.');
+  } else {
+    // Proceed with form submission
+    console.log('Form submitted successfully!');
+    // You can uncomment the next line to submit the form programmatically
+    // form.submit();
+  }
+});
+
     </script>
 
 {% endblock %}
