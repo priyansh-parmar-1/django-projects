@@ -101,4 +101,27 @@ def booking(request):
     cust_id = request.session.get('cust_id')
     return render(request,'booking.html', {'cars': car, 'cust_id': cust_id})
 
+def profile(request):
+    cust_id =request.session.get('cust_id')
+    cust_obj = Customer.objects.get(cust_id=cust_id)
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        uname = request.POST.get('username')
+        phone = request.POST.get('phone')
+        dl_no = request.POST.get('dl')
+        add = request.POST.get('address')
+        dl_image = request.FILES.get('dl_image')
+        cust_image = request.FILES.get('cust_image')
+        pass1 = cust_obj.password
+        if cust_image == None or cust_image == '':
+            cust_image = cust_obj.cust_image
+        if dl_image == None or dl_image == '':
+            dl_image = cust_obj.dl_image
+        if email == None or email == '':
+            email = cust_obj.email
+        new_cust = Customer(cust_id=cust_id ,name=uname, email=email, phone_no=phone,password=pass1, dl_no=dl_no, address=add, dl_image=dl_image, cust_image=cust_image)
+        new_cust.save()
+        cust_obj = Customer.objects.get(cust_id=cust_id)
+    return render(request, 'profile.html', {'cust': cust_obj, 'cust_id': cust_id})
+
 
