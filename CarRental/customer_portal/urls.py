@@ -31,7 +31,7 @@ urlpatterns = [
     path('profile/',profile, name='profile'),
     path('cars/<car_id>/', carDetails, name='carDetails'),
     path('booking/<car_id>/', booking, name='booking'),
-    path('verifyOTP/', verifyOTP, name='verifyOTP'),
+    path('verifyotp', verifyotp, name='verifyotp'),
     path('forgotPassword/', forgotPassword, name='forgotPassword'),
 
 ]

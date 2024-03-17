@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <!-- Design by foolishdeveloper.com -->
-    <title>Login Page</title>
+    <title>Verify OTP</title>
  
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -137,12 +137,13 @@ button{
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form method="post">
+    <form method="post" action="/verifyotp">
         <h3>Verify OTP</h3>
         {% csrf_token %} 
         <label for="otp">OTP</label>
         <input type="number" placeholder="enter otp here" id="otp" name="otp" required>
         <input type="hidden" id="email" name="email" value="{{email}}">
+        <input type="hidden" id="flag" name="flag" value="1">
         <button type="submit">Verify</button>
         <br><br><h4 style='color: red;'>{{msg}}</h4><br>
     </form>
