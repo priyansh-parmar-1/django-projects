@@ -30,7 +30,7 @@ urlpatterns = [
     path('cars/',cars,name='cars'),
     path('profile/',profile, name='profile'),
     path('cars/<car_id>/', carDetails, name='carDetails'),
-    path('booking/', booking, name='booking'),
+    path('booking/<car_id>/', booking, name='booking'),
     path('forgotPassword/', forgotPassword, name='forgotPassword'),
 
 ]
