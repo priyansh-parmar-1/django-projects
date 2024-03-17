@@ -25,6 +25,30 @@ body{
     left: 50%;
     top: 50%;
 }
+.background .shape{
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border-radius: 50%;
+}
+.shape:first-child{
+    background: linear-gradient(
+        #1845ad,
+        #23a2f6
+    );
+    left: -305px;
+    top: 253px;
+}
+.shape:last-child{
+    background: linear-gradient(
+        to right,
+        #ff512f,
+        #f09819
+    );
+    right: -250px;
+    bottom: -400px;
+}
+
 
 form{
     background-color: rgba(255,255,255,0.13);
@@ -245,7 +269,7 @@ button{
         {% csrf_token %}
         <div class="avatar-upload">
             <div class="avatar-edit">
-                <input type='file' id="cust_image" name="cust_image" value="{{cust.cust_image}}" accept=".png, .jpg, .jpeg" />
+                <input type='file' id="cust_image" name="cust_image" accept=".png, .jpg, .jpeg" />
                 <label for="cust_image"></label>
             </div>
             <div class="avatar-preview">
@@ -256,7 +280,7 @@ button{
         <div class="row">
             <div class="col-6">
             <label for="username">Full name</label>
-            <input type="text" placeholder="Enter full name" value="{{cust.name}}" name="username" id="username"  min="5" maxlength="100" required>
+            <input type="text" placeholder="Enter full name" value="{{cust.name}}" name="username" id="username"  minlength="5" maxlength="100" required>
             </div>
             <div class="col-6">
             <label for="phone">Phone Number</label>
@@ -265,7 +289,7 @@ button{
             </div>
             <div class="col-12">
             <label for="address">Address</label>
-            <textarea placeholder="Your Address" name="address" id="address"   required>{{cust.address}} </textarea>
+            <textarea placeholder="Your Address" name="address" id="address" required>{{cust.address}} </textarea>
 
             </div>
             <div class="col-6">
@@ -274,15 +298,17 @@ button{
 
             </div>
             <div class="col-6">
-                <label for="dl_image">Driving Licence Image</label>
-                <div class="file-upload-container">
-                    <input type="file" name="dl_image" id="dl_image" accept="image/*" value="{{cust.dl_image}}" class="file-upload-input"  >
+                <div class="form-group">
+                <label for="dl_image">Upload Driving Image</label>
+                <div class="file-upload-container" >
+                    <input  type="file" name="dl_image" id="dl_image" accept="image/*" class="file-upload-input" >
+                    <label style="margin-top: 25px; padding: 8px 20px;" for="dl_image" class="file-upload-label">Choose File</label>
                 </div>
-                <div id="dl_imagePreview" style="background-size: cover; background-repeat: no-repeat;
-  background-position: center;  width: 192px; height: 192px;
-  margin: auto;  position: relative; background-image: url('{{cust.dl_image.url}}');">
+                <div id="dl_imagePreview" >
+                    <img src="{{cust.dl_image.url}}" style="margin-left: -8px; width: 345px; height:200px; padding: 10px"/>
                 </div>
             </div>
+        </div>
         </div>
 
         <button type="submit">Save Details</button>
@@ -291,7 +317,6 @@ button{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <!-- <script src="path/to/your/validation-script.js"></script> -->
 <script>
-
 
   $("#dl_image").change(function () {
 	if (typeof (FileReader) != "undefined") {
@@ -302,7 +327,7 @@ button{
 				var reader = new FileReader();
 				reader.onload = function (e) {
 					var img = $("<img />");
-					img.attr("style", "width: 150px; height:100px; padding: 10px");
+					img.attr("style", "margin-left: -8px; width: 345px; height:200px; padding: 10px");
 					img.attr("src", e.target.result);
 					dvPreview.append(img);
 				}
