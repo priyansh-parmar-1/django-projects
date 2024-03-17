@@ -136,7 +136,7 @@
 <!-- Car Detail Section (existing code) -->
 
 {% comment %} Feedback Section {% endcomment %}
-<form method="POST" action="{% url 'submit_feedback' %}" class="mt-4">
+<form method="POST" action="{% url 'submit_feedback' %}" class="mt-4"  onsubmit="return validateFeedback()" >
     {% csrf_token %}
     {% for car_item in cars %}
     <input type="hidden" name="car_id" value="{{ car_item.car_id }}">
@@ -144,6 +144,7 @@
     <div class="form-group">
         <label for="feedback-message"> Feedback</label>
         <textarea class="form-control" id="feedback-message" name="feedback-message" rows="4" placeholder="Enter your feedback"></textarea>
+        <span id="feedback-error" style="color: orange;"></span>
     </div>
     <button type="submit" class="btn btn-primary">Submit Feedback</button>
 
@@ -164,6 +165,19 @@
             feedbackMsg.style.display = 'none';
         }
     }, 5000); // Adjust the timeout value as needed
+
+
+    function validateFeedback() {
+        var feedbackMessage = document.getElementById('feedback-message').value.trim();
+        var errorSpan = document.getElementById('feedback-error');
+        if (feedbackMessage === '') {
+            errorSpan.textContent = 'Please type something  here.';
+            return false; // Prevent form submission
+        } else {
+            errorSpan.textContent = ''; // Clear any previous error message
+        }
+        return true; // Allow form submission
+    }
 </script>
 
 
