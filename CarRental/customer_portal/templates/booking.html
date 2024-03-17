@@ -15,90 +15,43 @@
 
 
     <!-- Detail Start -->
+    {% for car in cars %}
     <div class="container-fluid pt-5">
         <div class="container pt-5 pb-3">
-            <h1 class="display-4 text-uppercase mb-5">Mercedes Benz R3</h1>
+            <h1 class="display-4 text-uppercase mb-5">{{car.model_name}}</h1>
             <div class="row align-items-center pb-2">
                 <div class="col-lg-6 mb-4">
-                    <img class="img-fluid" src="/static/img/bg-banner.jpg" alt="">
+                    <img class="img-fluid" src="{{car.car_image.url}}" alt="">
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <h4 class="mb-2">$99.00/Day</h4>
-                    <div class="d-flex mb-3">
-                        <h6 class="mr-2">Rating:</h6>
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star-half-alt text-primary mr-1"></small>
-                            <small>(250)</small>
-                        </div>
-                    </div>
+                    <h4 class="mb-2">₹{{car.charge}}/Hour</h4>
+
                     <p>Tempor erat elitr at rebum at at clita aliquyam consetetur. Diam dolor diam ipsum et, tempor voluptua sit consetetur sit. Aliquyam diam amet diam et eos sadipscing labore. Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo et tempor consetetur takimata eirmod, dolores takimata consetetur invidunt</p>
-                    <div class="d-flex pt-1">
-                        <h6>Share on:</h6>
-                        <div class="d-inline-flex">
-                            <a class="px-2" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="px-2" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="px-2" href=""><i class="fab fa-linkedin-in"></i></a>
-                            <a class="px-2" href=""><i class="fab fa-pinterest"></i></a>
-                        </div>
-                    </div>
+
                 </div>
             </div>
             <div class="row mt-n3 mt-lg-0 pb-4">
                 <div class="col-md-3 col-6 mb-2">
                     <i class="fa fa-car text-primary mr-2"></i>
-                    <span>Model: 2015</span>
+                    <span>Model: {{car.model_year}}</span>
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <i class="fa fa-cogs text-primary mr-2"></i>
-                    <span>Automatic</span>
+                    <span>{% if car.is_manual == 0 %}AUTO{% else %}MANUAL{% endif %}</span>
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <i class="fa fa-road text-primary mr-2"></i>
-                    <span>20km/liter</span>
+                    <span>{{car.mileage}}km/liter</span>
                 </div>
                 <div class="col-md-3 col-6 mb-2">
-                    <i class="fa fa-eye text-primary mr-2"></i>
-                    <span>GPS Navigation</span>
+                    <i class="fas fa-gas-pump text-primary mr-2"></i>
+                    <span>{%if car.fuel_type == 0 %}Petrol{% else %}Diesel{% endif %}</span>
                 </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <i class="fa fa-car text-primary mr-2"></i>
-                    <span>Model: 2015</span>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <i class="fa fa-cogs text-primary mr-2"></i>
-                    <span>Automatic</span>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <i class="fa fa-road text-primary mr-2"></i>
-                    <span>20km/liter</span>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <i class="fa fa-eye text-primary mr-2"></i>
-                    <span>GPS Navigation</span>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <i class="fa fa-car text-primary mr-2"></i>
-                    <span>Model: 2015</span>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <i class="fa fa-cogs text-primary mr-2"></i>
-                    <span>Automatic</span>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <i class="fa fa-road text-primary mr-2"></i>
-                    <span>20km/liter</span>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <i class="fa fa-eye text-primary mr-2"></i>
-                    <span>GPS Navigation</span>
-                </div>
+
             </div>
         </div>
     </div>
+    {% endfor %}
     <!-- Detail End -->
 
 
@@ -122,7 +75,7 @@
                                 <input type="email" class="form-control p-4" placeholder="Your Email" required="required">
                             </div>
                             <div class="col-6 form-group">
-                                <input type="text" class="form-control p-4" placeholder="Mobile Number" required="required">
+                                <input type="number" class="form-control p-4" placeholder="Mobile Number" maxlength="10" minlength="10" required="required">
                             </div>
                         </div>
                     </div>
@@ -130,20 +83,10 @@
                     <div class="mb-5">
                         <div class="row">
                             <div class="col-6 form-group">
-                                <select class="custom-select px-4" style="height: 50px;">
-                                    <option selected>Pickup Location</option>
-                                    <option value="1">Location 1</option>
-                                    <option value="2">Location 2</option>
-                                    <option value="3">Location 3</option>
-                                </select>
+                                <input type="text" class="form-control p-4" placeholder="Pickup Location" required="required">
                             </div>
                             <div class="col-6 form-group">
-                                <select class="custom-select px-4" style="height: 50px;">
-                                    <option selected>Drop Location</option>
-                                    <option value="1">Location 1</option>
-                                    <option value="2">Location 2</option>
-                                    <option value="3">Location 3</option>
-                                </select>
+                                <input type="text" class="form-control p-4" placeholder="Drop Location" required="required">
                             </div>
                         </div>
                         <div class="row">
@@ -160,24 +103,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-6 form-group">
-                                <select class="custom-select px-4" style="height: 50px;">
-                                    <option selected>Select Adult</option>
-                                    <option value="1">Adult 1</option>
-                                    <option value="2">Adult 2</option>
-                                    <option value="3">Adult 3</option>
-                                </select>
-                            </div>
-                            <div class="col-6 form-group">
-                                <select class="custom-select px-4" style="height: 50px;">
-                                    <option selected>Select Child</option>
-                                    <option value="1">Child 1</option>
-                                    <option value="2">Child 2</option>
-                                    <option value="3">Child 3</option>
-                                </select>
-                            </div>
-                        </div>
+
                         <div class="form-group">
                             <textarea class="form-control py-3 px-4" rows="3" placeholder="Special Request" required="required"></textarea>
                         </div>

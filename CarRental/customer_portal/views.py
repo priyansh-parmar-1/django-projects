@@ -78,19 +78,19 @@ def logout(request):
 
 def cars(request):
     car = Car.objects.all()
-    return render(request, 'cars.html', {'cars': car})
+    cust_id = request.session.get('cust_id')
+    return render(request, 'cars.html', {'cars': car, 'cust_id': cust_id})
 
 
 def carDetails(request, car_id):
     car = get_object_or_404(Car, pk=car_id)
-    return render(request, 'carDetails.html', {'cars': [car]})
-
-
-
-def booking(request):
-    car = Car.objects.all()
     cust_id = request.session.get('cust_id')
-    return render(request,'booking.html', {'cars': car, 'cust_id': cust_id})
+    return render(request, 'carDetails.html', {'cars': [car], 'cust_id': cust_id})
+
+def booking(request, car_id):
+    car = get_object_or_404(Car, pk=car_id)
+    cust_id = request.session.get('cust_id')
+    return render(request,'booking.html', {'cars': [car], 'cust_id': cust_id})
 
 def profile(request):
     cust_id =request.session.get('cust_id')
