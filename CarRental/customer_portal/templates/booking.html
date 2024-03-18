@@ -56,6 +56,7 @@
 
 
     <!-- Car Booking Start -->
+<form action="{% url 'payment'%}" method="get">
     <div class="container-fluid pb-5">
         <div class="container">
             <div class="row">
@@ -93,23 +94,24 @@
                             <div class="col-6 form-group">
                                 <div class="date" id="date2" data-target-input="nearest">
                                     <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Pickup Date"
-                                        data-target="#date2" data-toggle="datetimepicker" />
+                                        data-target="#date2" data-toggle="datetimepicker" required/>
                                 </div>
                             </div>
                             <div class="col-6 form-group">
                                 <div class="time" id="time2" data-target-input="nearest">
                                     <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Pickup Time"
-                                        data-target="#time2" data-toggle="datetimepicker" />
+                                        data-target="#time2" data-toggle="datetimepicker" required/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <a href="{% url 'payment'%}" class="btn btn-block btn-primary py-3">Reserve Now</a>
+                    <button class="btn btn-block btn-primary py-3">Reserve Now</button>
                 </div>
 
             </div>
         </div>
     </div>
+    </form>
     <!-- Car Booking End -->
 
 
