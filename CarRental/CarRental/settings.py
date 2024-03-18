@@ -61,6 +61,9 @@ EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 ALLOWED_HOSTS = []
 
+RAZOR_KEY_ID = 'rzp_test_ichaQ2N9xMeIn2'
+RAZOR_KEY_SECRET = '1Pqbeqzie3yFLW3s2NocAZbv'
+
 
 TEMPLATES = [
     {
@@ -137,8 +140,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATICFILES_DIRS = [BASE_DIR, "static"]
+STATICFILES_DIRS = []
 
 MEDIA_URL = 'media/'
+
+STATIC_ROOT = BASE_DIR / "static"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

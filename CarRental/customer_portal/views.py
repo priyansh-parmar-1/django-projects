@@ -10,14 +10,18 @@ from django.core.mail import send_mail
 from django.conf import settings
 import random
 import string
+import razorpay
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
+
+razorpay_client = razorpay.Client(
+    auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
 # Create your views here.
 
 def home(request):
-    car = Car.objects.all()
+    car = Car.objects.all()[:3]
     cust_id =request.session.get('cust_id')
     return render(request, 'index.html', {'cars': car, 'cust_id': cust_id})
 
@@ -52,7 +56,7 @@ def verifyotp(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         otp = request.POST.get('otp')
-        if email is not None and email is not '':
+        if email != None and email != '':
             cust_obj = Customer.objects.get(email=email, otp=otp)
             if cust_obj:
                 cust_obj.otp = 0
@@ -129,13 +133,9 @@ def carDetails(request, car_id):
 
 
 
-def booking(request):
-    car = Car.objects.all()
-    cust_id = request.session.get('cust_id')
-    return render(request, 'carDetails.html', {'cars': [car], 'cust_id': cust_id})
-
 def booking(request, car_id):
     car = get_object_or_404(Car, pk=car_id)
+    request.session['charge'] = car.charge
     cust_id = request.session.get('cust_id')
     return render(request,'booking.html', {'cars': [car], 'cust_id': cust_id})
 
@@ -194,8 +194,6 @@ def forgotPassword(request):
 # adding for feedback
 
 
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
 def submit_feedback(request):
     if request.method == 'POST':
@@ -211,6 +209,7 @@ def submit_feedback(request):
             try:
                 # Create a Feedback object with cust_id, car_id, and description
                 feedback = Feedback.objects.create(cust_id=cust_id, car_id=car_id, description=description)
+                feedback.save()
                 messages.success(request, 'Feedback submitted successfully!')
             except Exception as e:
                 messages.error(request, f'Error occurred while submitting feedback: {str(e)}')
@@ -222,3 +221,76 @@ def submit_feedback(request):
 
     # If request method is not POST, render the car detail page
     return render(request, 'carDetails.html')
+
+
+def payment(request):
+    amount = request.session.get('charge')*100
+    currency = request.session.get('currency', 'INR')
+    # Create a Razorpay Order
+    razorpay_order = razorpay_client.order.create(
+        dict(
+            amount=amount,
+            currency='INR',
+            payment_capture='0'
+        )
+    )
+
+    # order id of newly created order.
+    razorpay_order_id = razorpay_order['id']
+    callback_url = 'payment-handler/'
+    context = {
+        'razorpay_order_id': razorpay_order_id,
+        'razorpay_merchant_key': settings.RAZOR_KEY_ID,
+        'razorpay_amount': amount,
+        'currency': currency,
+        'callback_url': callback_url,
+        'total_amount': amount / 100,
+    }
+    return render(request, 'payment.html', context)
+
+
+# ----------------------- VERIFY SIGNATURE  -----------------------------------
+
+
+def paymenthandler(request):
+    # only accept POST request.
+    if request.method == "POST":
+        amount = request.session.get('charge')
+        try:
+            # get the required parameters from post request.
+            payment_id = request.POST.get('razorpay_payment_id', '')
+            razorpay_order_id = request.POST.get('razorpay_order_id', '')
+            signature = request.POST.get('razorpay_signature', '')
+
+            params_dict = {
+                'razorpay_order_id': razorpay_order_id,
+                'razorpay_payment_id': payment_id,
+                'razorpay_signature': signature
+            }
+
+            # verify the payment signature.
+
+            signature = razorpay_client.utility.verify_payment_signature(
+                params_dict)
+            if signature is not None:
+
+                try:
+                    # capture the payemt
+                    razorpay_client.payment.capture(payment_id, amount)
+
+                    # render success page on successful caputre of payment
+                    return render(request, 'payment-successful.html')
+                except Exception as e:
+                    print(e)
+                    # if there is an error while capturing payment.
+                    return render(request, 'payment-aborted.html')
+            else:
+                print('signature verification fails')
+                # if signature verification fails.
+                return render(request, 'payment-fail.html')
+        except Exception as e:
+            print(e)
+            return render(request, 'payment-aborted.html')
+    else:
+        # if other than POST request is made.
+        return render(request, 'payment-aborted.html')

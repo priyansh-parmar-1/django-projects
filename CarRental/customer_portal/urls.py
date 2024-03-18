@@ -20,23 +20,22 @@ from .views import *
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('signup/', signup, name='signup'),
-    path('login/',login,name='login'),
-    path('logout/',logout, name='logout'),
-    path('cars/',cars,name='cars'),
-    path('profile/',profile, name='profile'),
-    path('cars/<car_id>/', carDetails, name='carDetails'), 
-    path('booking/', booking, name='booking'),
-    path('submit_feedback/',submit_feedback, name='submit_feedback'),
+    path('login/', login, name='login'),
+    path('logout/', logout, name='logout'),
+    path('cars/', cars, name='cars'),
+    path('profile/', profile, name='profile'),
+    path('cars/<car_id>/', carDetails, name='carDetails'),
+    path('submit_feedback/', submit_feedback, name='submit_feedback'),
     path('cars/<car_id>/', carDetails, name='carDetails'),
     path('booking/<car_id>/', booking, name='booking'),
     path('verifyotp', verifyotp, name='verifyotp'),
     path('forgotPassword/', forgotPassword, name='forgotPassword'),
+    path('payment/', payment, name='payment'),
 
 ]
 if settings.DEBUG:
-        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
