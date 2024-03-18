@@ -29,8 +29,7 @@ def login(request):
             pass1 = request.POST.get('pass')
             cust_obj = Customer.objects.get(email=uname)
             if cust_obj:
-                cust_otp = Customer.objects.get(email=uname,otp=0)
-                if not cust_otp:
+                if int(cust_obj.otp) != int(0):
                     otp = int(''.join(random.choices(string.digits, k=6)))
                     cust_obj.otp = otp
                     cust_obj.save()
@@ -38,8 +37,8 @@ def login(request):
                            Please varify your email address by entering opt: """ + str(otp) + """ in verifation form."""
                     send_mail('Email varification OTP', message, 'settings.EMAIL_HOST_USER',
                               [uname], fail_silently=False)
-                    return render(request, 'verifyotp.html', {'email':uname})
-                elif cust_obj.password == pass1:
+                    return render(request, 'verifyotp.html', {'email': uname})
+                elif str(cust_obj.password) == str(pass1):
                     request.session['cust_id'] = cust_obj.cust_id
                     request.session['cust_email'] = cust_obj.email
                     return redirect('home')
@@ -49,6 +48,19 @@ def login(request):
         return render(request, 'login.html', {'msg': "Customer does not exist",'isError':1, "uname": uname, "pass1": pass1})
     return render(request, 'login.html')
 
+def verifyotp(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        otp = request.POST.get('otp')
+        if email is not None and email is not '':
+            cust_obj = Customer.objects.get(email=email, otp=otp)
+            if cust_obj:
+                cust_obj.otp = 0
+                cust_obj.save()
+                return render(request, 'login.html', {'msg': "OTP verified successfully", 'isError': 0})
+            else:
+                return render(request, 'verifyotp.html', {'msg': "Invalid otp"})
+    return render(request, 'verifyotp.html')
 
 def signup(request):
     if request.method == 'POST':
@@ -76,19 +88,6 @@ def signup(request):
         return render(request, 'verifyotp.html', {'email': email})
     return render(request, 'signup.html')
 
-def verifyotp(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        otp = request.POST.get('otp')
-        if email is not None and email != '':
-            cust_obj = Customer.objects.get(email=email,otp=otp)
-            if cust_obj:
-                cust_obj.otp = 0
-                cust_obj.save()
-                return render(request, 'login.html', {'msg': "OTP verified successfully", 'isError': 0})
-            else:
-                return render(request, 'verifyotp.html', {'msg': "Invalid otp"})
-    return render(request, 'verifyotp.html')
 
 
 # adding code for forgot password

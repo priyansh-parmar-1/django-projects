@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
     <!--Stylesheet-->
     <style media="screen">
       *,
@@ -213,26 +214,31 @@ button{
     <form action="" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
         {% csrf_token %}
         <h3>Signup Here</h3>
-
+        <div class="row">
+        <div class="col-6">
         <label for="username">Full name</label>
         <input type="text" placeholder="Enter full name" name="username" id="username" required minlength="5" maxlength="100">
         <span id="username-error" style="color: red;"></span>
-
+        </div>
+        <div class="col-6">
         <label for="email">Email</label>
         <input type="email" placeholder="Enter email" name="email" id="email" required>
         <span id="email-error" style="color: red;">{{msg}}</span>
-
+        </div>
+        <div class="col-6">
         <label for="phone">Phone Number</label>
         <input type="text" placeholder="Enter Phone Number" name="phone" id="phone" required pattern="\d{10}">
         <span id="phone-error" style="color: red;"></span>
-
+        </div>
+        <div class="col-6">
         <label for="address">Address</label>
         <input type="text" placeholder="Your Address" name="address" id="address" required>
         <span id="address-error" style="color: red;"></span>
-
+        </div>
+        <div class="col-6">
         <!-- Upload Your Image section omitted for brevity -->
         <!--        new added-->
-            <div class="form-group">
+        <div class="form-group">
         <label for="cust_image">Upload Your Image</label>
         <div class="file-upload-container">
             <input type="file" name="cust_image" id="cust_image" accept=".jpg, .jpeg, .png" class="file-upload-input" required
@@ -240,37 +246,43 @@ button{
             <label for="cust_image" class="file-upload-label">Choose File</label>
         </div>
         <div class="file-preview" id="image-preview"></div>
-    </div>
-
+        </div>
+        </div>
+        <div class="col-6">
 <!--        end new added-->
 
         <label for="dl">Driving Licence No</label>
         <input type="text" placeholder="GJ-2018-230895-1234" name="dl" id="dl" required >
         <span id="dl-error" style="color: red;"></span>
-
+        </div>
+        <div class="col-6">
         <div class="form-group">
-    <label for="dl_image">Upload Driving Licence</label>
-    <div class="file-upload-container">
-        <input type="file" name="dl_image" id="dl_image" accept="image/*" class="file-upload-input" required onchange="previewImage(event)">
-        <label for="dl_image" class="file-upload-label">Choose File</label>
-    </div>
-    <div class="file-preview" id="image-preview"></div>
-</div>
-
+            <label for="dl_image">Upload Driving Licence</label>
+            <div class="file-upload-container">
+                <input type="file" name="dl_image" id="dl_image" accept="image/*" class="file-upload-input" required onchange="previewImage(event)">
+                <label for="dl_image" class="file-upload-label">Choose File</label>
+            </div>
+            <div class="file-preview" id="image-preview"></div>
+        </div>
+        </div>
+        <div class="col-6">
 
         <!-- Upload Driving Licence section omitted for brevity -->
 
         <label for="password1">Password</label>
         <input type="password" placeholder="Password" id="password1" name="password1" minlength="8" maxlength="16" required>
         <span id="password1-error" style="color: red;"></span>
-
+        </div>
+        <div class="col-6">
         <label for="password2">Confirm Password</label>
         <input type="password" placeholder="Confirm Password" id="password2" name="password2" minlength="8" maxlength="16" required>
         <span id="password2-error" style="color: red;"></span>
-
+        </div>
         <button type="submit">Signup</button>
 
         <a href="{% url 'login' %}">already have an account?</a>
+
+        </div>
     </form>
 
     <!-- <script src="path/to/your/validation-script.js"></script> -->
