@@ -86,6 +86,9 @@
                     <div class="navbar-nav ml-auto py-0">
                         <a href="/" class="nav-item nav-link active">Home</a>
                         <a href="/cars" class="nav-item nav-link active">Cars</a>
+                        {% if cust_id != 0 and cust_id != None %}
+                        <a href="/viewbookings" class="nav-item nav-link">Bookings</a>
+                        {% endif %}
                         <a href="#" class="nav-item nav-link">About</a>
                         {% if cust_id == 0 or cust_id == None %}
                         <a href="/login" class="nav-item nav-link">login</a>

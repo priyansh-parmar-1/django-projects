@@ -13,7 +13,21 @@
             <th>Pickup date & time</th>
             <th>Drop date & time</th>
             <th>Amount</th>
+            <th>Registration No.</th>
+            <th>Status</th>
         </tr>
+        {% for booking in bookings %}
+
+        <tr>
+            <td><img src="{{booking.car.car_image.url}}" height="200px" width="300px"></td>
+            <td>{{booking.car.model_name}}</td>
+            <td>{{booking.start_date_time}}</td>
+            <td>{{booking.end_date_time}}</td>
+            <td>{{booking.amt}}</td>
+            <td>{{booking.car.registration_no}}</td>
+            <td>{{booking.status}}</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
 </div>

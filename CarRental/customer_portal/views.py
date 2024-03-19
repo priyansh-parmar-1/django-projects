@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect,redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as user_login, logout as user_logout
@@ -170,22 +171,30 @@ def confirm_booking(request):
         pick_area = get_object_or_404(Area, pk=pick_code)
         pick_location = request.POST.get('pickuplocation')
         drop_location = request.POST.get('droplocation')
-        pick_date_time = request.POST.get('pickupdate')
-        drop_date_time = request.POST.get('dropdate')
+        pick_date_time_str = request.POST.get('pickupdate')
+        drop_date_time_str = request.POST.get('dropdate')
         car_id = request.session.get('car_id')
         car = get_object_or_404(Car, pk=car_id)
         cust_id = request.session.get('cust_id')
-        amt = request.session.get('charge')
+        charge = request.session.get('charge')
+
+        pick_date_time = datetime.strptime(pick_date_time_str, '%Y-%m-%dT%H:%M')
+        drop_date_time = datetime.strptime(drop_date_time_str, '%Y-%m-%dT%H:%M')
+
+        time_difference = drop_date_time - pick_date_time
+        total_hours = time_difference.total_seconds() / 3600
+        amt = total_hours * charge
 
         booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
-                              status='confirmed', start_date_time=pick_date_time, end_date_time=drop_date_time,
+                              status='confirmed', start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
                               pick_pincode=pick_area, drop_pincode=drop_area)
         booking_obj.save()
         print("confirm")
     return render(request,'confirm_booking.html')
 
 def view_bookings(request):
-    bookings = Booking.objects.all()
+    cust_id = request.session.get('cust_id')
+    bookings = Booking.objects.filter(cust=cust_id)
     return render(request,'view_bookings.html',{'bookings':bookings})
 
 def profile(request):

@@ -95,7 +95,7 @@
                                 <div class="date" id="date2" data-target-input="nearest">
                                     <label for="pickupdate">Pickup (date and time):</label>
                                     <input type="datetime-local" class="form-control p-4 datetimepicker-input" placeholder="Pickup Date"
-                                        data-target="#date2" data-toggle="datetimepicker" id="pickupdate" name="pickupdate" required/>
+                                        data-target="#date2" data-toggle="datetimepicker" id="pickupdate" name="pickupdate" onclick="setminPickDate()" onchange="setMinDropDate()" required/>
                                 </div>
                             </div>
                             <div class="col-6 form-group">
@@ -115,6 +115,18 @@
     </div>
     </form>
     <!-- Car Booking End -->
-
+<script>
+function setminPickDate(){
+        var dateTimeInput = document.getElementById("pickupdate");
+        var currentDate = new Date();
+        var formattedDate = currentDate.toISOString().substring(0, 16);
+        dateTimeInput.setAttribute("min", formattedDate);
+    }
+    function setMinDropDate(){
+        var dateTimeInput = document.getElementById("dropdate");
+        var mindate = new Date(document.getElementById("pickupdate").value);
+        var formattedDate = mindate.toISOString().substring(0, 16);
+        dateTimeInput.setAttribute("min", formattedDate);
+    }</script>
 
  {% endblock %}
