@@ -38,7 +38,6 @@ urlpatterns = [
     path('verifyotp', verifyotp, name='verifyotp'),
     path('forgotPassword/', forgotPassword, name='forgotPassword'),
     path('payment/', payment, name='payment'),
-    path('confirm/', confirm_booking, name='confirm_booking'),
     path('viewbookings/', view_bookings, name='viewbookings'),
 
 ]

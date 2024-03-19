@@ -166,22 +166,12 @@ def booking(request, car_id):
         area = Area.objects.all()
         request.session['charge'] = car.charge
         request.session['car_id'] = car_id
-        if request.method == 'POST':
-            drop_code = request.POST.get('drop_pincode')
-            pick_code = request.POST.get('pickup_pincode')
-            pick_location = request.POST.get('pickup_location')
-            drop_location = request.POST.get('drop_location')
-            pick_date_time = request.POST.get('pickupdate')
-            drop_date_time = request.POST.get('dropdate')
-            request.session['drop_pincode'] = drop_code
-            request.session['pickup_pincode'] = pick_code
-            request.session['pickup_location'] = pick_location
-            request.session['drop_location'] = drop_location
-            request.session['pickup_date'] = pick_date_time
-            request.session['drop_date'] = drop_date_time
+
     return render(request, 'booking.html', {'cars': [car], 'cust_id': cust_id, 'areas': area})
 
-def confirm_booking(request):
+def view_bookings(request):
+    cust_id = request.session.get('cust_id')
+    bookings = Booking.objects.filter(cust=cust_id)
     if request.method == 'POST':
         drop_code = request.POST.get('drop_pincode')
         pick_code = request.POST.get('pickup_pincode')
@@ -207,13 +197,10 @@ def confirm_booking(request):
                               status='confirmed', start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
                               pick_pincode=pick_area, drop_pincode=drop_area)
         booking_obj.save()
-        print("confirm")
-    return render(request,'confirm_booking.html')
+        msg = 'Booking confirmed'
+        return render(request,'view_bookings.html',{'bookings':bookings,'msg':msg})
+    return render(request,'view_bookings.html',{'bookings':bookings,})
 
-def view_bookings(request):
-    cust_id = request.session.get('cust_id')
-    bookings = Booking.objects.filter(cust=cust_id)
-    return render(request,'view_bookings.html',{'bookings':bookings})
 
 def profile(request):
     cust_id =request.session.get('cust_id')
