@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+   {% if alert_message %}
+<script>
+    alert("{{ alert_message }}");
+    // Function to redirect back to the booking page
+    function redirectToBookingPage() {
+        window.location.href = "{% url 'booking' car.car_id%}";
+    }
+    // Call the redirect function after the user clicks "OK"
+    window.onload = function() {
+        setTimeout(function() {
+            redirectToBookingPage();
+        }, 1);
+    };
+</script>
+{% endif %}
+
+
+</body>
+</html>
