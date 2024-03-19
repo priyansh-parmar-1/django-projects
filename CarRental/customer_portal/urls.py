@@ -39,6 +39,7 @@ urlpatterns = [
     path('forgotPassword/', forgotPassword, name='forgotPassword'),
     path('payment/', payment, name='payment'),
     path('viewbookings/', view_bookings, name='viewbookings'),
+    path('viewbookings', view_bookings, name='viewbookings'),
 
 ]
 if settings.DEBUG:

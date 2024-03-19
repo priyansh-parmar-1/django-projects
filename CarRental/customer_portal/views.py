@@ -15,6 +15,7 @@ import string
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
+from django.utils import timezone
 
 
 # razorpay_client = razorpay.Client(
@@ -54,6 +55,7 @@ def login(request):
     return render(request, 'login.html')
 
 def changepassword(request):
+    cust_id = request.session.get('cust_id')
     try:
         if request.method == 'POST':
             cust_id = request.session.get('cust_id')
@@ -64,12 +66,12 @@ def changepassword(request):
                 if cust_obj.password == currPass:
                     cust_obj.password = newPass
                     cust_obj.save()
-                    return render(request, 'changepassword.html', {'msg': 'Password updated successfully', 'isError': 0})
+                    return render(request, 'changepassword.html', {'msg': 'Password updated successfully', 'isError': 0, 'cust_id': cust_id})
                 else:
-                    return render(request, 'changepassword.html', {'msg': 'Incorrect password', 'isError': 1})
+                    return render(request, 'changepassword.html', {'msg': 'Incorrect password', 'isError': 1, 'cust_id': cust_id})
     except :
         pass
-    return render(request, 'changepassword.html')
+    return render(request, 'changepassword.html',{'cust_id': cust_id})
 
 def verifyotp(request):
     if request.method == 'POST':
@@ -172,8 +174,20 @@ def view_bookings(request):
     cust_id = request.session.get('cust_id')
     if cust_id == 0 or cust_id == None:
         return redirect('login')
-    bookings = Booking.objects.filter(cust=cust_id)
     if request.method == 'POST':
+        fg = int(request.POST.get('flag'))
+        if fg == 1:
+            booking_id = request.POST.get('booking_id')
+            bookings = Booking.objects.get(cust=cust_id, booking_id=booking_id)
+            bookings.status = 'cancelled'
+            bookings.save()
+            msg = "Booking cancelled successfully"
+            bookings = Booking.objects.filter(cust=cust_id)
+            now = timezone.now()
+            for i in bookings:
+                time_difference = i.start_date_time - now
+                i.time = int(time_difference.total_seconds() / 3600)
+            return render(request, 'view_bookings.html', {'bookings': bookings, 'msg': msg, 'cust_id': cust_id})
         drop_code = request.POST.get('drop_pincode')
         pick_code = request.POST.get('pickup_pincode')
         drop_area = get_object_or_404(Area, pk=drop_code)
@@ -203,10 +217,20 @@ def view_bookings(request):
 
         booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
                               status='confirmed', start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
-                              pick_pincode=pick_area, drop_pincode=drop_area)
+                              pick_pincode=pick_area, drop_pincode=drop_area,time=0)
         booking_obj.save()
         msg = 'Booking confirmed'
+        bookings = Booking.objects.filter(cust=cust_id)
+        now = timezone.now()
+        for i in bookings:
+            time_difference = i.start_date_time - now
+            i.time = int(time_difference.total_seconds() / 3600)
         return render(request,'view_bookings.html',{'bookings':bookings,'msg':msg})
+    bookings = Booking.objects.filter(cust=cust_id)
+    now = timezone.now()
+    for i in bookings:
+        time_difference = i.start_date_time - now
+        i.time = int(time_difference.total_seconds() / 3600)
     return render(request,'view_bookings.html',{'bookings':bookings,})
 
 
