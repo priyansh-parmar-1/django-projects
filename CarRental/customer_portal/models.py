@@ -156,6 +156,7 @@ class Booking(models.Model):
     end_date_time = models.DateTimeField()
     pick_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='pick_pincode')
     drop_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='drop_pincode', related_name='booking_drop_pincode_set')
+    time = models.IntegerField()
 
     class Meta:
         managed = False
