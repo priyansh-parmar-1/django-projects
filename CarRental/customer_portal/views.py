@@ -166,11 +166,12 @@ def booking(request, car_id):
         area = Area.objects.all()
         request.session['charge'] = car.charge
         request.session['car_id'] = car_id
-
     return render(request, 'booking.html', {'cars': [car], 'cust_id': cust_id, 'areas': area})
 
 def view_bookings(request):
     cust_id = request.session.get('cust_id')
+    if cust_id == 0 or cust_id == None:
+        return redirect('login')
     bookings = Booking.objects.filter(cust=cust_id)
     if request.method == 'POST':
         drop_code = request.POST.get('drop_pincode')
@@ -192,6 +193,13 @@ def view_bookings(request):
         time_difference = drop_date_time - pick_date_time
         total_hours = time_difference.total_seconds() / 3600
         amt = total_hours * charge
+
+        if Booking.objects.filter(car=car,end_date_time__gt=pick_date_time).exists():
+            # If there's an existing booking with end_date_time later than pick_date_time
+            # Handle this case (e.g., display an error message)
+            print(car_id)
+            return render(request, 'booking_error.html',
+                          {'alert_message': 'Cannot make booking. Overlapping with existing booking.','car':car})
 
         booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
                               status='confirmed', start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
