@@ -30,6 +30,7 @@ urlpatterns = [
     path('cars/', cars, name='cars'),
     path('cars', cars, name='cars'),
     path('profile/', profile, name='profile'),
+    path('changepassword/', changepassword, name='changepassword'),
     path('cars/<car_id>/', carDetails, name='carDetails'),
     path('submit_feedback/', submit_feedback, name='submit_feedback'),
     path('cars/<car_id>/', carDetails, name='carDetails'),

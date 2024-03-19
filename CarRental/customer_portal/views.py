@@ -11,14 +11,14 @@ from django.core.mail import send_mail
 from django.conf import settings
 import random
 import string
-import razorpay
+#import razorpay
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
 
 
-razorpay_client = razorpay.Client(
-    auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+# razorpay_client = razorpay.Client(
+#     auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
 # Create your views here.
 
 def home(request):
@@ -52,6 +52,24 @@ def login(request):
     except Customer.DoesNotExist:
         return render(request, 'login.html', {'msg': "Customer does not exist",'isError':1, "uname": uname, "pass1": pass1})
     return render(request, 'login.html')
+
+def changepassword(request):
+    try:
+        if request.method == 'POST':
+            cust_id = request.session.get('cust_id')
+            currPass = request.POST.get('currPass')
+            newPass = request.POST.get('newPass')
+            cust_obj = Customer.objects.get(cust_id=cust_id)
+            if cust_obj:
+                if cust_obj.password == currPass:
+                    cust_obj.password = newPass
+                    cust_obj.save()
+                    return render(request, 'changepassword.html', {'msg': 'Password updated successfully', 'isError': 0})
+                else:
+                    return render(request, 'changepassword.html', {'msg': 'Incorrect password', 'isError': 1})
+    except :
+        pass
+    return render(request, 'changepassword.html')
 
 def verifyotp(request):
     if request.method == 'POST':
