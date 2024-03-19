@@ -95,23 +95,35 @@ class AuthUserUserPermissions(models.Model):
 class Booking(models.Model):
     booking_id = models.AutoField(primary_key=True)
     car = models.ForeignKey('Car', models.DO_NOTHING)
-    cust_id = models.IntegerField()
+    cust = models.ForeignKey('Customer', models.DO_NOTHING)
     amt = models.FloatField()
     pick_add = models.CharField(max_length=200)
     drop_add = models.CharField(max_length=200)
     status = models.CharField(max_length=10)
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
+    pick_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='pick_pincode')
+    drop_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='drop_pincode', related_name='booking_drop_pincode_set')
 
     class Meta:
         managed = False
         db_table = 'booking'
     def __str__(self):
-        return self.booking_id
+        return self.status
+
+class Company(models.Model):
+    company_id = models.AutoField(primary_key=True)
+    company_name = models.CharField(max_length=25)
+
+    class Meta:
+        managed = False
+        db_table = 'company'
+    def _str_(self):
+        return self.company_name
 
 class Car(models.Model):
     car_id = models.AutoField(primary_key=True)
-    company_id = models.IntegerField()
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     registration_no = models.CharField(max_length=10)
     car_image = models.ImageField(upload_to='img/')
     model_year = models.IntegerField()
@@ -127,18 +139,8 @@ class Car(models.Model):
     class Meta:
         managed = False
         db_table = 'car'
-    def __str__(self):
+    def _str_(self):
         return self.model_name
-
-class Company(models.Model):
-    company_id = models.AutoField(primary_key=True)
-    company_name = models.CharField(max_length=25)
-
-    class Meta:
-        managed = False
-        db_table = 'company'
-    def __str__(self):
-        return self.company_name
 
 class Customer(models.Model):
     cust_id = models.AutoField(primary_key=True)

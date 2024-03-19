@@ -1,7 +1,6 @@
 {% extends 'masterpage.html' %}
 {% block content %}
 {% load static %}
-{% csrf_token %}
     <!-- Page Header Start -->
     <div class="container-fluid page-header">
         <h1 class="display-3 text-uppercase text-white mb-3">Car Booking</h1>
@@ -56,51 +55,54 @@
 
 
     <!-- Car Booking Start -->
-<form action="{% url 'payment'%}" method="get">
+<form action="{% url 'confirm_booking'%}" method="POST">
+    {% csrf_token %}
     <div class="container-fluid pb-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h2 class="mb-4">Personal Detail</h2>
-                    <div class="mb-5">
-                        <div class="row">
-                            <div class="col-6 form-group">
-                                <input type="text" class="form-control p-4" placeholder="First Name" required="required">
-                            </div>
-                            <div class="col-6 form-group">
-                                <input type="text" class="form-control p-4" placeholder="Last Name" required="required">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 form-group">
-                                <input type="email" class="form-control p-4" placeholder="Your Email" required="required">
-                            </div>
-                            <div class="col-6 form-group">
-                                <input type="number" class="form-control p-4" placeholder="Mobile Number" maxlength="10" minlength="10" required="required">
-                            </div>
-                        </div>
-                    </div>
+
                     <h2 class="mb-4">Booking Detail</h2>
                     <div class="mb-5">
                         <div class="row">
                             <div class="col-6 form-group">
-                                <input type="text" class="form-control p-4" placeholder="Pickup Location" required="required">
+                                <label>Pickup Pincode</label>
+                                <select class="custom-select px-4 mb-3" style="height: 50px;" name="pickup_pincode">
+                                    {% for area in areas%}
+                                    <option value="{{area.pincode}}">{{ area.pincode }} </option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="col-6 form-group">
-                                <input type="text" class="form-control p-4" placeholder="Drop Location" required="required">
+                                <label for="pickuplocation">Pickup Location:</label>
+                                <input type="text" class="form-control p-4" placeholder="Pickup Location" id="pickuplocation" name="pickuplocation" required="required">
+                            </div>
+                            <div class="col-6 form-group">
+                                <label>Drop Pincode</label>
+                                <select class="custom-select px-4 mb-3" style="height: 50px;" name="drop_pincode">
+                                {% for area in areas%}
+                                    <option value="{{area.pincode}}">{{ area.pincode }} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-6 form-group">
+                                <label for="droplocation">Drop Location:</label>
+                                <input type="text" class="form-control p-4" placeholder="Drop Location" id="droplocation" name="droplocation" required="required">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-6 form-group">
                                 <div class="date" id="date2" data-target-input="nearest">
-                                    <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Pickup Date"
-                                        data-target="#date2" data-toggle="datetimepicker" required/>
+                                    <label for="pickupdate">Pickup (date and time):</label>
+                                    <input type="datetime-local" class="form-control p-4 datetimepicker-input" placeholder="Pickup Date"
+                                        data-target="#date2" data-toggle="datetimepicker" id="pickupdate" name="pickupdate" required/>
                                 </div>
                             </div>
                             <div class="col-6 form-group">
-                                <div class="time" id="time2" data-target-input="nearest">
-                                    <input type="text" class="form-control p-4 datetimepicker-input" placeholder="Pickup Time"
-                                        data-target="#time2" data-toggle="datetimepicker" required/>
+                                <div class="date" id="date1" data-target-input="nearest">
+                                    <label for="dropdate">Drop (date and time):</label>
+                                    <input type="datetime-local" class="form-control p-4 datetimepicker-input" placeholder="Drop Date"
+                                        data-target="#date1" data-toggle="datetimepicker" id="dropdate" name="dropdate" required/>
                                 </div>
                             </div>
                         </div>

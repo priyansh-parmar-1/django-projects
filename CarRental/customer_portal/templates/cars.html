@@ -1,7 +1,39 @@
 {% extends 'masterpage.html' %}
 {% block content %}
 {% load static %}
+<style>
+    #search{
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+    background-color:  #ffffff;
+    box-shadow: 4px 2px 4px 0 ;
+    padding: 14px 15px 14px 40px;
+    border: 1px solid #b6c3cd;;
+    border-right: 0;
+    color:#4E565C;
+    outline: none;
+    -webkit-appearance: none;
+}
 
+</style>
+    <!-- Search Start -->
+    <div class="container-fluid bg-white pt-3 px-lg-5">
+       <form method="post" action="/cars">
+           {% csrf_token %}
+           <div class="row">
+                <div class="col-xl-6">
+                </div>
+                <div class="col-xl-4">
+                    <input type="search" placeholder="search here..." class="mb-6" id="search" name="search">
+                </div>
+                <div class="col-xl-2 ">
+                    <button class="btn btn-primary btn-block mb-3" type="submit" style="height: 50px;">Search</button>
+                </div>
+            </div>
+       </form>
+    </div>
  <!-- Rent A Car Start -->
  <div class="container-fluid py-5">
     <div class="container pt-5 pb-3">

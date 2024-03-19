@@ -25,8 +25,10 @@ urlpatterns = [
     path('', home, name='home'),
     path('signup/', signup, name='signup'),
     path('login/', login, name='login'),
+    path('login', login, name='login'),
     path('logout/', logout, name='logout'),
     path('cars/', cars, name='cars'),
+    path('cars', cars, name='cars'),
     path('profile/', profile, name='profile'),
     path('cars/<car_id>/', carDetails, name='carDetails'),
     path('submit_feedback/', submit_feedback, name='submit_feedback'),
@@ -35,6 +37,8 @@ urlpatterns = [
     path('verifyotp', verifyotp, name='verifyotp'),
     path('forgotPassword/', forgotPassword, name='forgotPassword'),
     path('payment/', payment, name='payment'),
+    path('confirm/', confirm_booking, name='confirm_booking'),
+    path('viewbookings/', view_bookings, name='viewbookings'),
 
 ]
 if settings.DEBUG:

@@ -13,7 +13,7 @@ import string
 import razorpay
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-
+from django.db.models import Q
 
 
 razorpay_client = razorpay.Client(
@@ -38,7 +38,7 @@ def login(request):
                     cust_obj.otp = otp
                     cust_obj.save()
                     message = """Thank you 🙏 for choosing CAR CASTLE. 
-                           Please varify your email address by entering opt: """ + str(otp) + """ in verifation form."""
+                           Please varify your email address by entering opt: """ + str(otp) + """ in verification form."""
                     send_mail('Email varification OTP', message, 'settings.EMAIL_HOST_USER',
                               [uname], fail_silently=False)
                     return render(request, 'verifyotp.html', {'email': uname})
@@ -110,7 +110,12 @@ def logout(request):
     return redirect('home')
 
 def cars(request):
-    car = Car.objects.all()
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        multipleQ = Q(Q(model_name__icontains=search) | Q(car_type__icontains=search) | Q(company__company_name__icontains=search))
+        car = Car.objects.filter(multipleQ)
+    else :
+        car = Car.objects.all()
     cust_id = request.session.get('cust_id')
     return render(request, 'cars.html', {'cars': car, 'cust_id': cust_id})
 
@@ -134,10 +139,54 @@ def carDetails(request, car_id):
 
 
 def booking(request, car_id):
-    car = get_object_or_404(Car, pk=car_id)
-    request.session['charge'] = car.charge
     cust_id = request.session.get('cust_id')
-    return render(request,'booking.html', {'cars': [car], 'cust_id': cust_id})
+    if cust_id == 0 or cust_id == None:
+        return redirect('login')
+    else:
+        car = get_object_or_404(Car, pk=car_id)
+        area = Area.objects.all()
+        request.session['charge'] = car.charge
+        request.session['car_id'] = car_id
+        if request.method == 'POST':
+            drop_code = request.POST.get('drop_pincode')
+            pick_code = request.POST.get('pickup_pincode')
+            pick_location = request.POST.get('pickup_location')
+            drop_location = request.POST.get('drop_location')
+            pick_date_time = request.POST.get('pickupdate')
+            drop_date_time = request.POST.get('dropdate')
+            request.session['drop_pincode'] = drop_code
+            request.session['pickup_pincode'] = pick_code
+            request.session['pickup_location'] = pick_location
+            request.session['drop_location'] = drop_location
+            request.session['pickup_date'] = pick_date_time
+            request.session['drop_date'] = drop_date_time
+    return render(request, 'booking.html', {'cars': [car], 'cust_id': cust_id, 'areas': area})
+
+def confirm_booking(request):
+    if request.method == 'POST':
+        drop_code = request.POST.get('drop_pincode')
+        pick_code = request.POST.get('pickup_pincode')
+        drop_area = get_object_or_404(Area, pk=drop_code)
+        pick_area = get_object_or_404(Area, pk=pick_code)
+        pick_location = request.POST.get('pickuplocation')
+        drop_location = request.POST.get('droplocation')
+        pick_date_time = request.POST.get('pickupdate')
+        drop_date_time = request.POST.get('dropdate')
+        car_id = request.session.get('car_id')
+        car = get_object_or_404(Car, pk=car_id)
+        cust_id = request.session.get('cust_id')
+        amt = request.session.get('charge')
+
+        booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
+                              status='confirmed', start_date_time=pick_date_time, end_date_time=drop_date_time,
+                              pick_pincode=pick_area, drop_pincode=drop_area)
+        booking_obj.save()
+        print("confirm")
+    return render(request,'confirm_booking.html')
+
+def view_bookings(request):
+    bookings = Booking.objects.all()
+    return render(request,'view_bookings.html',{'bookings':bookings})
 
 def profile(request):
     cust_id =request.session.get('cust_id')
