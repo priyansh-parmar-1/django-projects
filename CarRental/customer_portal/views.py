@@ -36,6 +36,10 @@ def contact(request):
     cust_id = request.session.get('cust_id')
     return render(request,'contact.html', {'cust_id': cust_id})
 
+def terms(request):
+    cust_id = request.session.get('cust_id')
+    return render(request,'terms_conditions.html', {'cust_id': cust_id})
+
 def login(request):
     try:
         if request.method == 'POST':
