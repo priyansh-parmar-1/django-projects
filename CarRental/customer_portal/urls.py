@@ -42,7 +42,7 @@ urlpatterns = [
     path('viewbookings', view_bookings, name='viewbookings'),
     path('about/', about, name='about'),
     path('contact/', contact, name='contact'),
-
+    path('invoice/<int:booking_id>/', downloadinvoice, name='invoice'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

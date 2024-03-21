@@ -17,6 +17,7 @@
             <th>Registration No.</th>
             <th>Status</th>
             <th>Cancel booking</th>
+            <th>Invoice</th>
         </tr>
         {% for booking in bookings %}
 
@@ -39,6 +40,10 @@
 
                 </form>
                 {% endif %}
+            </td>
+            <td>
+                {% csrf_token %}
+                <a href="{% url 'invoice' booking.booking_id %}" class="btn btn-primary py-md-3 px-md-5 mt-2">Download</a>
             </td>
         </tr>
         {% endfor %}
