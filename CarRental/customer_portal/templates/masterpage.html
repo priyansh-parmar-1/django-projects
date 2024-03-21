@@ -19,7 +19,7 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
 
@@ -84,21 +84,26 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="/" class="nav-item nav-link active">Home</a>
-                        <a href="/cars" class="nav-item nav-link active">Cars</a>
-                        {% if cust_id != 0 and cust_id != None %}
-                        <a href="/viewbookings" class="nav-item nav-link">Bookings</a>
-                        {% endif %}
+                        <a href="/" class="nav-item nav-link">Home</a>
+                        <a href="/cars" class="nav-item nav-link">Cars</a>
                         <a href="#" class="nav-item nav-link">About</a>
+                        <a href="#" class="nav-item nav-link">Contact</a>
                         {% if cust_id == 0 or cust_id == None %}
                         <a href="/login" class="nav-item nav-link">Login</a>
                         {% else %}
-                        <a href="/logout" class="nav-item nav-link">Logout</a>
-                        <a href="/profile" class="nav-item nav-link">Profile</a>
-                        <a href="/changepassword" class="nav-item nav-link">Change password</a>
+                         <div class="dropdown " style=" margin-right: 70px;">
+                              <button class="btn dropdown-toggle dropdown-toggle-split nav-item nav-link"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fa fa-user" ></i>
+                              </button>
+                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="myDropdown" style="background-color:#F77D0A;">
+                                <a href="/profile" class="dropdown-item nav-item nav-link">Profile</a>
+                                <a href="/changepassword" class="dropdown-item nav-item nav-link">Change password</a>
+                                <a href="/viewbookings" class="dropdown-item nav-item nav-link">Bookings</a>
+                                <a href="/logout" class="dropdown-item nav-item nav-link">Logout</a>
+                              </div>
+                         </div>
                         {% endif %}
 
-                        <a href="#" class="nav-item nav-link">Contact</a>
                     </div>
                 </div>
             </nav>
