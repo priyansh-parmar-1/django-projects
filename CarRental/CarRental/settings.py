@@ -61,8 +61,8 @@ EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 ALLOWED_HOSTS = []
 
-RAZOR_KEY_ID = 'rzp_test_ichaQ2N9xMeIn2'
-RAZOR_KEY_SECRET = '1Pqbeqzie3yFLW3s2NocAZbv'
+RAZOR_KEY_ID = 'rzp_test_zL6UJeuzbo8rNk'
+RAZOR_KEY_SECRET = '7X6pSHXakyjGlGdYvGmZ95zt'
 
 
 TEMPLATES = [

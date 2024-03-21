@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.shortcuts import render, redirect,redirect,get_object_or_404
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as user_login, logout as user_logout
 from .models import *
@@ -11,16 +11,16 @@ from django.core.mail import send_mail
 from django.conf import settings
 import random
 import string
-#import razorpay
+import razorpay
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
 from django.utils import timezone
 
 
-# razorpay_client = razorpay.Client(
-#     auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
-# Create your views here.
+razorpay_client = razorpay.Client(
+     auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+ #Create your views here.
 
 def home(request):
     car = Car.objects.all()[:3]
