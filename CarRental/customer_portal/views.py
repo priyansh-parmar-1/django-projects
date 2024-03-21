@@ -17,7 +17,9 @@ from django.urls import reverse
 from django.db.models import Q
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 razorpay_client = razorpay.Client(
      auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
@@ -35,10 +37,6 @@ def about(request):
 def contact(request):
     cust_id = request.session.get('cust_id')
     return render(request,'contact.html', {'cust_id': cust_id})
-
-def terms(request):
-    cust_id = request.session.get('cust_id')
-    return render(request,'terms_conditions.html', {'cust_id': cust_id})
 
 def login(request):
     try:
@@ -125,19 +123,6 @@ def signup(request):
         return render(request, 'verifyotp.html', {'email': email})
     return render(request, 'signup.html')
 
-
-
-# adding code for forgot password
-# def changePassword(request):
-#     return render(request,'change-password.html')
-
-
-
-#     except Exception as e:
-#         print(e)
-#     return render(request,'forget-password.html')
-
-
 def logout(request):
     user_logout(request)
     return redirect('home')
@@ -152,7 +137,6 @@ def cars(request):
     cust_id = request.session.get('cust_id')
     return render(request, 'cars.html', {'cars': car, 'cust_id': cust_id})
 
-
 def carDetails(request, car_id):
     car = get_object_or_404(Car, pk=car_id)
     cust_id = request.session.get('cust_id')
@@ -166,9 +150,20 @@ def carDetails(request, car_id):
         feedback_details.append({'customer_name': customer.name,'customer_image': customer.cust_image.url, 'feedback_description': feedback.description})
     
     return render(request, 'carDetails.html', {'cars': [car],'cust_id':cust_id, 'msg': msg, 'feedback_details': feedback_details})
-    
-    # return render(request, 'carDetails.html', {'cars': [car],'msg': msg})
 
+def downloadinvoice(request, booking_id):
+    booking = Booking.objects.get(booking_id=booking_id)
+    template = get_template('invoice.html')
+    html = template.render({'booking': booking})
+    # Create PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
+    # Generate PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    # If PDF generation failed, return error
+    if pisa_status.err:
+        return HttpResponse('PDF generation error.')
+    return response
 
 
 def booking(request, car_id):
