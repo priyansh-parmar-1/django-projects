@@ -15,7 +15,7 @@ from django.db import models
 class Area(models.Model):
     pincode = models.IntegerField(primary_key=True)
     area_name = models.CharField(max_length=45)
-
+    DisplayFields = ['pincode','area_name']
     class Meta:
         managed = False
         db_table = 'area'
@@ -107,7 +107,7 @@ class Car(models.Model):
     registration_no = models.CharField(max_length=10)
     car_image = models.ImageField(upload_to='img/')
     model_year = models.IntegerField()
-    is_manual = models.IntegerField()
+    is_manual = models.BooleanField()
     mileage = models.IntegerField()
     fuel_type = models.IntegerField()
     car_type = models.CharField(max_length=20)
@@ -115,7 +115,7 @@ class Car(models.Model):
     capacity = models.IntegerField()
     color = models.CharField(max_length=10)
     charge = models.FloatField()
-
+    DisplayFields = ['car_id','company','registration_no','car_image','model_year','is_manual','mileage','fuel_type','car_type','model_name','capacity','color','charge']
     class Meta:
         managed = False
         db_table = 'car'
@@ -131,10 +131,9 @@ class Customer(models.Model):
     address = models.CharField(max_length=200)
     password = models.CharField(max_length=16)
     dl_image = models.ImageField(upload_to='dl_img/')
-    is_verified = models.IntegerField()
+    is_verified = models.BooleanField()
     otp = models.IntegerField()
     cust_image = models.ImageField(upload_to='cust_img/')
-
     class Meta:
         managed = False
         db_table = 'customer'
@@ -157,7 +156,7 @@ class Booking(models.Model):
     pick_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='pick_pincode')
     drop_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='drop_pincode', related_name='booking_drop_pincode_set')
     time = models.IntegerField()
-
+    DisplayFields = ['booking_id','car','cust','amt','pick_add','drop_add','status','start_date_time','end_date_time','pick_pincode','drop_pincode']
     class Meta:
         managed = False
         db_table = 'booking'

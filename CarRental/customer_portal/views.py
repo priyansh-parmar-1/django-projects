@@ -143,7 +143,7 @@ def cars(request):
 
 def carDetails(request, car_id):
     car = get_object_or_404(Car, pk=car_id)
-
+    cust_id = request.session.get('cust_id')
     msg = request.session.pop('feedback_success_msg', None)
     feedback_list = Feedback.objects.filter(car_id=car_id)
 
@@ -153,7 +153,7 @@ def carDetails(request, car_id):
         customer = Customer.objects.get(cust_id=feedback.cust_id)
         feedback_details.append({'customer_name': customer.name,'customer_image': customer.cust_image.url, 'feedback_description': feedback.description})
     
-    return render(request, 'carDetails.html', {'cars': [car], 'msg': msg, 'feedback_details': feedback_details})
+    return render(request, 'carDetails.html', {'cars': [car],'cust_id':cust_id, 'msg': msg, 'feedback_details': feedback_details})
     
     # return render(request, 'carDetails.html', {'cars': [car],'msg': msg})
 
@@ -210,8 +210,7 @@ def view_bookings(request):
 
         if Booking.objects.filter(car=car,end_date_time__gt=pick_date_time).exists():
             # If there's an existing booking with end_date_time later than pick_date_time
-            # Handle this case (e.g., display an error message)
-            print(car_id)
+            
             return render(request, 'booking_error.html',
                           {'alert_message': 'Cannot make booking. Overlapping with existing booking.','car':car})
 
@@ -225,13 +224,13 @@ def view_bookings(request):
         for i in bookings:
             time_difference = i.start_date_time - now
             i.time = int(time_difference.total_seconds() / 3600)
-        return render(request,'view_bookings.html',{'bookings':bookings,'msg':msg})
+        return render(request,'view_bookings.html',{'bookings':bookings,'cust_id':cust_id,'msg':msg})
     bookings = Booking.objects.filter(cust=cust_id)
     now = timezone.now()
     for i in bookings:
         time_difference = i.start_date_time - now
         i.time = int(time_difference.total_seconds() / 3600)
-    return render(request,'view_bookings.html',{'bookings':bookings,})
+    return render(request,'view_bookings.html',{'bookings':bookings,'cust_id':cust_id,})
 
 
 def profile(request):
