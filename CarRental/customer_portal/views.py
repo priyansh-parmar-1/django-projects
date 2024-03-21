@@ -16,6 +16,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 
 razorpay_client = razorpay.Client(
@@ -23,10 +24,17 @@ razorpay_client = razorpay.Client(
  #Create your views here.
 
 def home(request):
-    car = Car.objects.all()[:3]
+    car = Car.objects.all()[:6]
     cust_id =request.session.get('cust_id')
     return render(request, 'index.html', {'cars': car, 'cust_id': cust_id})
 
+def about(request):
+    cust_id = request.session.get('cust_id')
+    return render(request,'about.html', {'cust_id': cust_id})
+
+def contact(request):
+    cust_id = request.session.get('cust_id')
+    return render(request,'contact.html', {'cust_id': cust_id})
 
 def login(request):
     try:
@@ -346,6 +354,7 @@ def payment(request):
 # ----------------------- VERIFY SIGNATURE  -----------------------------------
 
 
+@csrf_exempt
 def paymenthandler(request):
     # only accept POST request.
     if request.method == "POST":

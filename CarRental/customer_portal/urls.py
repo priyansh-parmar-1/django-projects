@@ -40,6 +40,8 @@ urlpatterns = [
     path('payment/', payment, name='payment'),
     path('viewbookings/', view_bookings, name='viewbookings'),
     path('viewbookings', view_bookings, name='viewbookings'),
+    path('about/', about, name='about'),
+    path('contact/', contact, name='contact'),
 
 ]
 if settings.DEBUG:
