@@ -23,10 +23,22 @@
                     <img class="img-fluid" src="{{car.car_image.url}}" alt="">
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <h4 class="mb-2">₹{{car.charge}}/Hour</h4>
-
-                    <p>Tempor erat elitr at rebum at at clita aliquyam consetetur. Diam dolor diam ipsum et, tempor voluptua sit consetetur sit. Aliquyam diam amet diam et eos sadipscing labore. Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo et tempor consetetur takimata eirmod, dolores takimata consetetur invidunt</p>
-
+                    <h4 class="mb-2">₹{{car.charge}}/Hour</h4><br>
+                       <h6>Terms and Conditions:</h6>
+                        <ul>
+                            <li>
+                                All renters must be 18 years of age or older and possess a valid driver's license.
+                            </li>
+                            <li>
+                                Renters are required to carry their physical driver's license with them during the duration of the rental period.
+                            </li>
+                            <li>
+                                The vehicle will be provided with a full tank of fuel, and renters are expected to return the vehicle with the same fuel level.
+                            </li>
+                            <li>
+                                Any damages incurred during the rental period will be the responsibility of the renter, as outlined in the Rental Agreement.
+                            </li>
+                        </ul>
                 </div>
             </div>
             <div class="row mt-n3 mt-lg-0 pb-4">
@@ -44,7 +56,7 @@
                 </div>
                 <div class="col-md-3 col-6 mb-2">
                     <i class="fas fa-gas-pump text-primary mr-2"></i>
-                    <span>{%if car.fuel_type == 0 %}Petrol{% else %}Diesel{% endif %}</span>
+                    <span>{%if car.is_diesel == 0 %}Petrol{% else %}Diesel{% endif %}</span>
                 </div>
 
             </div>
@@ -55,7 +67,7 @@
 
 
     <!-- Car Booking Start -->
-<form action="{% url 'payment'%}" method="POST">
+<form action="{% url 'viewbookings'%}" method="POST">
     {% csrf_token %}
     <div class="container-fluid pb-5">
         <div class="container">
@@ -95,18 +107,19 @@
                                 <div class="date" id="date2" data-target-input="nearest">
                                     <label for="pickupdate">Pickup (date and time):</label>
                                     <input type="datetime-local" class="form-control p-4 datetimepicker-input" placeholder="Pickup Date"
-                                        data-target="#date2" data-toggle="datetimepicker" id="pickupdate" name="pickupdate" onclick="setminPickDate()" onchange="setMinDropDate()" required/>
+                                         data-toggle="datetimepicker" id="pickupdate" name="pickupdate" onclick="setminPickDate()" onchange="setMinDropDate()" required/>
                                 </div>
                             </div>
                             <div class="col-6 form-group">
                                 <div class="date" id="date1" data-target-input="nearest">
                                     <label for="dropdate">Drop (date and time):</label>
                                     <input type="datetime-local" class="form-control p-4 datetimepicker-input" placeholder="Drop Date"
-                                        data-target="#date1" data-toggle="datetimepicker" id="dropdate" name="dropdate" required/>
+                                         data-toggle="datetimepicker" id="dropdate" name="dropdate" required/>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <input type="checkbox" required> I've read the <a href="/terms" target="_blank">terms and conditions</a><span style="color:red">*</span>
                     <input type="hidden" id="flag" name="flag" value="0" />
                     <button class="btn btn-block btn-primary py-3">Reserve Now</button>
                 </div>
@@ -118,11 +131,15 @@
     <!-- Car Booking End -->
 <script>
 function setminPickDate(){
-        var dateTimeInput = document.getElementById("pickupdate");
-        var currentDate = new Date();
-        var formattedDate = currentDate.toISOString().substring(0, 16);
-        dateTimeInput.setAttribute("min", formattedDate);
-    }
+    var dateTimeInput = document.getElementById("pickupdate");
+    var currentDate = new Date();
+    // Adding 2 hours to the current date
+    currentDate.setHours(currentDate.getHours() + 2);
+    var formattedDate = currentDate.toISOString().substring(0, 16);
+    dateTimeInput.setAttribute("min", formattedDate);
+    dateTimeInput.setAttribute("value", formattedDate); // Set the value to the minimum allowed time
+}
+
     function setMinDropDate(){
         var dateTimeInput = document.getElementById("dropdate");
         var mindate = new Date(document.getElementById("pickupdate").value);

@@ -109,7 +109,7 @@ class Car(models.Model):
     model_year = models.IntegerField()
     is_manual = models.BooleanField()
     mileage = models.IntegerField()
-    fuel_type = models.IntegerField()
+    is_diesel = models.BooleanField()
     car_type = models.CharField(max_length=20)
     model_name = models.CharField(max_length=45)
     capacity = models.IntegerField()
@@ -127,7 +127,7 @@ class Customer(models.Model):
     name = models.CharField(max_length=45)
     phone_no = models.CharField(max_length=10)
     email = models.CharField(max_length=50)
-    dl_no = models.CharField(max_length=16)
+    dl_no = models.CharField(max_length=20)
     address = models.CharField(max_length=200)
     password = models.CharField(max_length=16)
     dl_image = models.ImageField(upload_to='dl_img/')
@@ -156,7 +156,8 @@ class Booking(models.Model):
     pick_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='pick_pincode')
     drop_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='drop_pincode', related_name='booking_drop_pincode_set')
     time = models.IntegerField()
-    DisplayFields = ['booking_id','car','cust','amt','pick_add','drop_add','status','start_date_time','end_date_time','pick_pincode','drop_pincode']
+    booking_date_time = models.DateTimeField()
+    DisplayFields = ['booking_id','car','cust','amt','pick_add','drop_add','status','start_date_time','end_date_time','pick_pincode','drop_pincode','booking_date_time']
     class Meta:
         managed = False
         db_table = 'booking'

@@ -29,7 +29,7 @@ class AreaAdmin(admin.ModelAdmin):
 
 @admin.register(models.Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ('car_id','company','registration_no','image','model_year','is_manual','mileage','fuel_type','car_type','model_name','capacity','color','charge')
+    list_display = ('car_id','company','registration_no','image','model_year','is_manual','mileage','is_diesel','car_type','model_name','capacity','color','charge')
 
     def image(self,obj):
         return format_html('<img src="{0}" width="auto" height="100px">'.format(obj.car_image.url))
@@ -37,3 +37,7 @@ class CarAdmin(admin.ModelAdmin):
 @admin.register(models.Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('feedback_id','cust','car','description')
+
+@admin.register(models.Company)
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ('company_id','company_name')

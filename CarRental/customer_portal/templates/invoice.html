@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+</head>
+<body>
     <title>Car Invoice</title>
     <style>
         body {
@@ -31,42 +33,41 @@
         }
     </style>
 </head>
-<body>
         <h1 align="center"> Car Castle</h1>
     <div class="container">
         <h2>Booking Invoice</h2>
         <table>
             <tr>
                 <th>Invoice Number:</th>
-                <td>#INV123456</td>
+                <td>{{booking.booking_id}}</td>
             </tr>
             <tr>
                 <th>Customer Name:</th>
                 <td>{{booking.cust.name}}</td>
             </tr>
             <tr>
-                <th>Customer Address:</th>
-                <td>123 Main Street, Cityville, State, ZIP</td>
+                <th>Pickup Address:</th>
+                <td>{{booking.pick_add}}</td>
+            </tr>
+             <tr>
+                <th>Drop Address:</th>
+                <td>{{booking.drop_add}}</td>
             </tr>
             <tr>
                 <th>Car Model:</th>
-                <td>Toyota Camry</td>
+                <td>{{booking.car.model_name}}</td>
             </tr>
             <tr>
                 <th>Year:</th>
-                <td>2023</td>
+                <td>{{booking.car.model_year}}</td>
             </tr>
             <tr>
                 <th>Color:</th>
-                <td>Black</td>
-            </tr>
-            <tr>
-                <th>Price:</th>
-                <td>$25,000</td>
+                <td>{{booking.car.color}}</td>
             </tr>
         </table>
         <div class="total">
-            <strong>Total:</strong> $25,000
+            <strong>Total:</strong>  {{booking.amt}}
         </div>
     </div>
 </body>

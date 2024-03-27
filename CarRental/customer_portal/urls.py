@@ -44,6 +44,7 @@ urlpatterns = [
     path('contact/', contact, name='contact'),
     path('invoice/<int:booking_id>/', downloadinvoice, name='invoice'),
     path('terms/', terms, name='terms'),
+    path('success/', success, name='success'),
 
 ]
 if settings.DEBUG:

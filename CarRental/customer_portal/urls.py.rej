@@ -1,9 +1,0 @@
-diff a/CarRental/customer_portal/urls.py b/CarRental/customer_portal/urls.py	(rejected hunks)
-@@ -42,6 +42,7 @@
-     path('viewbookings', view_bookings, name='viewbookings'),
-     path('about/', about, name='about'),
-     path('contact/', contact, name='contact'),
-+    path('terms/', terms, name='terms'),
- 
- ]
- if settings.DEBUG:
