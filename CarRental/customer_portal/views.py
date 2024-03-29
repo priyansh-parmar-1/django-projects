@@ -34,21 +34,17 @@ def home(request):
     cust_id = request.session.get('cust_id')
     return render(request, 'index.html', {'cars': car, 'cust_id': cust_id})
 
-
 def about(request):
     cust_id = request.session.get('cust_id')
     return render(request, 'about.html', {'cust_id': cust_id})
-
 
 def contact(request):
     cust_id = request.session.get('cust_id')
     return render(request, 'contact.html', {'cust_id': cust_id})
 
-
 def terms(request):
     cust_id = request.session.get('cust_id')
     return render(request, 'terms_conditions.html', {'cust_id': cust_id})
-
 
 def login(request):
     try:
@@ -79,7 +75,6 @@ def login(request):
                       {'msg': "Customer does not exist", 'isError': 1, "uname": uname, "pass1": pass1})
     return render(request, 'login.html')
 
-
 def changepassword(request):
     cust_id = request.session.get('cust_id')
     try:
@@ -101,7 +96,6 @@ def changepassword(request):
         pass
     return render(request, 'changepassword.html', {'cust_id': cust_id})
 
-
 def verifyotp(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -115,7 +109,6 @@ def verifyotp(request):
             else:
                 return render(request, 'verifyotp.html', {'msg': "Invalid otp"})
     return render(request, 'verifyotp.html')
-
 
 def signup(request):
     if request.method == 'POST':
@@ -144,11 +137,9 @@ def signup(request):
         return render(request, 'verifyotp.html', {'email': email})
     return render(request, 'signup.html')
 
-
 def logout(request):
     user_logout(request)
     return redirect('home')
-
 
 def cars(request):
     if request.method == 'POST':
@@ -175,8 +166,13 @@ def carDetails(request, car_id):
         feedback_details.append({'customer_name': customer.name, 'customer_image': customer.cust_image.url,
                                  'feedback_description': feedback.description})
 
+    booking = Booking.objects.filter(car_id=car_id,cust_id=cust_id,status='completed')
+    if booking:
+        isbooked = 1
+    else:
+        isbooked = 0
     return render(request, 'carDetails.html',
-                  {'cars': [car], 'cust_id': cust_id, 'msg': msg, 'feedback_details': feedback_details})
+                  {'cars': [car], 'cust_id': cust_id, 'msg': msg, 'isbooked':isbooked,'feedback_details': feedback_details})
 
 
 def downloadinvoice(request, booking_id):
@@ -244,12 +240,12 @@ def view_bookings(request):
         time_difference = drop_date_time - pick_date_time
         total_hours = time_difference.total_seconds() / 3600
         amt = total_hours * charge
-
-        if Booking.objects.filter(car=car, end_date_time__gt=pick_date_time, status='confirmed').exists():
+        bk = Booking.objects.filter(car=car, end_date_time__gt=pick_date_time, status='confirmed')
+        if bk.exists():
             # If there's an existing booking with end_date_time later than pick_date_time
-
+            msg= 'Cannot make booking. Overlapping with existing booking From: '+bk[0].start_date_time.strftime("%Y-%m-%d %H:%M:%S") +' To: '+bk[0].end_date_time.strftime("%Y-%m-%d %H:%M:%S")
             return render(request, 'booking_error.html',
-                          {'alert_message': 'Cannot make booking. Overlapping with existing booking.', 'car': car})
+                          {'alert_message': msg, 'car': car})
 
         booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
                               status='confirmed', start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
@@ -294,7 +290,6 @@ def profile(request):
         cust_obj = Customer.objects.get(cust_id=cust_id)
     return render(request, 'profile.html', {'cust': cust_obj, 'cust_id': cust_id})
 
-
 def forgotPassword(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -320,10 +315,7 @@ def forgotPassword(request):
                   [email], fail_silently=False)
         return render(request, 'forgotPassword.html', {'msg': 'We have sent you email to change password'})
     return render(request, 'forgotPassword.html')
-
-
 # adding for feedback
-
 
 def submit_feedback(request):
     cust_id = request.session.get('cust_id')
@@ -441,3 +433,4 @@ def paymenthandler(request):
     else:
         # if other than POST request is made.
         return render(request, 'payment-aborted.html')'''
+
