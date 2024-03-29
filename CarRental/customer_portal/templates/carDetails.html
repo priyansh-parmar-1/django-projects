@@ -141,7 +141,7 @@
 <!-- Car Detail Section (existing code) -->
 
 {% comment %} Feedback Section {% endcomment %}
-{% if cust_id != 0 and cust_id is not None %}
+{% if cust_id != 0 and cust_id is not None and isbooked != 0 %}
 <form method="POST" action="{% url 'submit_feedback' %}" class="mt-4"  onsubmit="return validateFeedback()" >
     {% csrf_token %}
     {% for car_item in cars %}

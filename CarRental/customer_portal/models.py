@@ -143,6 +143,16 @@ class Customer(models.Model):
     def isExist(self):
         return Customer.objects.filter(email=self.email).exists()
 
+class bookingstatus(models.Model):
+    status_id = models.AutoField(primary_key=True)
+    status_name = models.CharField(max_length=15)
+
+    class Meta:
+        managed = False
+        db_table = 'bookingstatus'
+    def __str__(self):
+        return self.status_name
+
 class Booking(models.Model):
     booking_id = models.AutoField(primary_key=True)
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
@@ -150,7 +160,7 @@ class Booking(models.Model):
     amt = models.FloatField()
     pick_add = models.CharField(max_length=200)
     drop_add = models.CharField(max_length=200)
-    status = models.CharField(max_length=10)
+    status = models.ForeignKey(bookingstatus, on_delete=models.CASCADE)
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
     pick_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='pick_pincode')
@@ -162,7 +172,7 @@ class Booking(models.Model):
         managed = False
         db_table = 'booking'
     def __str__(self):
-        return self.status
+        return str(bookingstatus.status_name)
 
 
 
