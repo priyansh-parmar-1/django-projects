@@ -13,10 +13,13 @@ admin.site.register(models.Payment)
 @admin.register(models.Booking)
 class BookingAdmin(admin.ModelAdmin):
     list_display = models.Booking.DisplayFields
+    # search_fields=('car','cust',)
+    list_filter=('car',)
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ('cust_id','image','name','phone_no','email','dl_no','address','drivinglicense','is_verified')
+    list_filter=('name','email',)
 
     def image(self,obj):
         return format_html('<img src="{0}" width="auto" height="100px">'.format(obj.cust_image.url))
@@ -26,10 +29,13 @@ class CustomerAdmin(admin.ModelAdmin):
 @admin.register(models.Area)
 class AreaAdmin(admin.ModelAdmin):
     list_display = models.Area.DisplayFields
+    search_fields=('area_name','pincode',)
 
 @admin.register(models.Car)
 class CarAdmin(admin.ModelAdmin):
     list_display = ('car_id','company','registration_no','image','model_year','is_manual','mileage','is_diesel','car_type','model_name','capacity','color','charge')
+    search_fields=('company',)
+    list_filter=('company','model_year','is_manual','is_diesel','color')
 
     def image(self,obj):
         return format_html('<img src="{0}" width="auto" height="100px">'.format(obj.car_image.url))
@@ -37,7 +43,9 @@ class CarAdmin(admin.ModelAdmin):
 @admin.register(models.Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('feedback_id','cust','car','description')
+    search_fields=('cust','car',)
 
 @admin.register(models.Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('company_id','company_name')
+    search_fields=('company_name',)
