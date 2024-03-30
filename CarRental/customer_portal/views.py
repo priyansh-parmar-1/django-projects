@@ -166,7 +166,7 @@ def carDetails(request, car_id):
         feedback_details.append({'customer_name': customer.name, 'customer_image': customer.cust_image.url,
                                  'feedback_description': feedback.description})
 
-    booking = Booking.objects.filter(car_id=car_id,cust_id=cust_id,status=2)
+    booking = Booking.objects.filter(car_id=car_id,cust_id=cust_id,status_id=2)
     if booking:
         isbooked = 1
     else:
@@ -211,7 +211,7 @@ def view_bookings(request):
         if fg == 1:
             booking_id = request.POST.get('booking_id')
             bookings = Booking.objects.get(cust=cust_id, booking_id=booking_id)
-            bookings.status = 'cancelled'
+            bookings.status_id = 4
             bookings.save()
             msg = "Booking cancelled successfully"
             bookings = Booking.objects.filter(cust=cust_id)
@@ -238,7 +238,8 @@ def view_bookings(request):
         time_difference = drop_date_time - pick_date_time
         total_hours = time_difference.total_seconds() / 3600
         amt = total_hours * charge
-        bk = Booking.objects.filter(car=car, end_date_time__gt=pick_date_time, status='confirmed')
+        bk = Booking.objects.filter(car=car, end_date_time__gt=pick_date_time, status_id=1)
+
         if bk.exists():
             # If there's an existing booking with end_date_time later than pick_date_time
             msg= 'Cannot make booking. Overlapping with existing booking From: '+bk[0].start_date_time.strftime("%Y-%m-%d %H:%M:%S") +' To: '+bk[0].end_date_time.strftime("%Y-%m-%d %H:%M:%S")
@@ -246,7 +247,7 @@ def view_bookings(request):
                           {'alert_message': msg, 'car': car})
 
         booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
-                              status='confirmed', start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
+                              status=1, start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
                               pick_pincode=pick_area, drop_pincode=drop_area, time=0)
         booking_obj.save()
         msg = 'Booking confirmed'
