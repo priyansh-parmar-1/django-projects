@@ -32,7 +32,7 @@
             <td>
                  <form  method="POST">
                         {% csrf_token %}
-                {% if booking.time > 5 and booking.status != 'cancelled' %}
+                {% if booking.time > 5 and booking.status_id != 4 %}
 
                         <input type="hidden" id="flag" name="flag" value="1" />
                         <input type="hidden"  id="booking_id" name="booking_id" value="{{booking.booking_id}}"/>
