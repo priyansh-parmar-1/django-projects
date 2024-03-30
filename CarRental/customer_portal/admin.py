@@ -45,6 +45,17 @@ class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('feedback_id','cust','car','description')
     search_fields=('cust','car',)
 
+    def get_actions(self, request):
+        # Disable all actions
+        actions = super().get_actions(request)
+        del actions['delete_selected']
+        return actions
+    
+    
+    def has_add_permission(self, request):
+        # Disable add permission
+        return False
+
 @admin.register(models.Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('company_id','company_name')
