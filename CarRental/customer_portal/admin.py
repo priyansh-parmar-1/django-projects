@@ -9,6 +9,7 @@ from django.utils.html import format_html
 #admin.site.register(models.Company)
 #admin.site.register(models.Feedback)
 admin.site.register(models.Payment)
+admin.site.register(models.bookingstatus)
 
 @admin.register(models.Booking)
 class BookingAdmin(admin.ModelAdmin):

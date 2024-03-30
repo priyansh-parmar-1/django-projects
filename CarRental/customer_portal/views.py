@@ -166,7 +166,7 @@ def carDetails(request, car_id):
         feedback_details.append({'customer_name': customer.name, 'customer_image': customer.cust_image.url,
                                  'feedback_description': feedback.description})
 
-    booking = Booking.objects.filter(car_id=car_id,cust_id=cust_id,status='completed')
+    booking = Booking.objects.filter(car_id=car_id,cust_id=cust_id,status=2)
     if booking:
         isbooked = 1
     else:
@@ -232,8 +232,6 @@ def view_bookings(request):
         car = get_object_or_404(Car, pk=car_id)
         cust_id = request.session.get('cust_id')
         charge = request.session.get('charge')
-        indian_timezone = pytz.timezone('Asia/Kolkata')
-        current_time = timezone.now().astimezone(indian_timezone)
         pick_date_time = datetime.strptime(pick_date_time_str, '%Y-%m-%dT%H:%M')
         drop_date_time = datetime.strptime(drop_date_time_str, '%Y-%m-%dT%H:%M')
 
@@ -249,7 +247,7 @@ def view_bookings(request):
 
         booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
                               status='confirmed', start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
-                              pick_pincode=pick_area, drop_pincode=drop_area, time=0, booking_date_time=current_time)
+                              pick_pincode=pick_area, drop_pincode=drop_area, time=0)
         booking_obj.save()
         msg = 'Booking confirmed'
         bookings = Booking.objects.filter(cust=cust_id).order_by('booking_date_time')
