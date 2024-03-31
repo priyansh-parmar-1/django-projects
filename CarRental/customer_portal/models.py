@@ -1,3 +1,6 @@
+
+from django.utils import timezone
+
 from django.db import models
 
 # Create your models here.
@@ -166,11 +169,12 @@ class Booking(models.Model):
     pick_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='pick_pincode')
     drop_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='drop_pincode', related_name='booking_drop_pincode_set')
     time = models.IntegerField()
-    booking_date_time = models.DateTimeField()
+    booking_date_time = models.DateTimeField(default=timezone.now())
     DisplayFields = ['booking_id','car','cust','amt','pick_add','drop_add','status','start_date_time','end_date_time','pick_pincode','drop_pincode','booking_date_time']
     class Meta:
         managed = False
         db_table = 'booking'
+
     def __str__(self):
         return str(bookingstatus.status_name)
 

@@ -247,7 +247,7 @@ def view_bookings(request):
                           {'alert_message': msg, 'car': car})
 
         booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
-                              status=1, start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
+                              status_id=1, start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
                               pick_pincode=pick_area, drop_pincode=drop_area, time=0)
         booking_obj.save()
         msg = 'Booking confirmed'
@@ -257,7 +257,7 @@ def view_bookings(request):
             time_difference = i.start_date_time - now
             i.time = int(time_difference.total_seconds() / 3600)
         return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id, 'msg': msg})
-    bookings = Booking.objects.filter(cust=cust_id)
+    bookings = Booking.objects.filter(cust=cust_id).order_by('booking_date_time')
     now = timezone.now()
     for i in bookings:
         time_difference = i.start_date_time - now
