@@ -39,8 +39,35 @@ admin.site.register(models.bookingstatus)
 #         response['Content-Disposition'] = 'attachment; filename="payment_report.pdf"'
 
 #         # Create PDF content using ReportLab
-#         pdf = SimpleDocTemplate(response, pagesize=letter)
+        #   pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=10, leftMargin=10, topMargin=20, bottomMargin=50)
 #         elements = []
+
+                # Get the current date and time
+        # current_date = datetime.datetime.now().strftime("Report date  : "+"%Y/%m/%d ")
+        # # current_date = datetime.datetime.now().strftime("Report date  : "+"%Y/%m/%d  %H:%M:%S")
+
+        # # Add the current date to the PDF elements
+        # current_date_paragraph = Paragraph(current_date, getSampleStyleSheet()["BodyText"])
+        # elements.append(current_date_paragraph)
+
+
+
+
+            # Define a custom Paragraph style with centered alignment
+        # centered_style = ParagraphStyle(
+        #     name='CenteredHeading',
+        #     parent=getSampleStyleSheet()["Heading1"],
+        #     alignment=TA_CENTER
+        # )
+
+        # # Define the path to your image file
+        # image_path = settings.MEDIA_ROOT + '/img/logo-no-background.png'
+        # # Add the image to the PDF elements
+        # image = Image(image_path, width=200, height=30)  # Adjust width and height as needed
+        # elements.append(image)
+        # # Define the margin after the image
+        # margin_after_image = 40
+        # Add a Spacer element to create
 
 #         # Table data
 #         data = [["Payment ID", "Booking ID", "Customer", "Transaction", "Status", "Payment Date"]]
@@ -51,11 +78,12 @@ admin.site.register(models.bookingstatus)
 #                 payment.cust.name,
 #                 payment.transaction,
 #                 payment.status,
+#                 payment.payment_date.strftime("Report Date : "+"%Y-%m-%d ")
 #                 payment.payment_date.strftime("%Y-%m-%d %H:%M:%S")
 #             ])
 
 #         # Calculate column widths dynamically based on content
-#         col_widths = [max([len(str(row[i])) * 6 for row in data]) for i in range(len(data[0]))]
+#         col_widths = [max([len(str(row[i])) * 3.5 for row in data]) for i in range(len(data[0]))]
 
 #         # Create table with adjusted column widths
 #         table = Table(data, colWidths=col_widths)
