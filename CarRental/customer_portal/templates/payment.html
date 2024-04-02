@@ -1,9 +1,14 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Page</title>
+
+    <!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.min.css" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -30,38 +35,63 @@
 <!-- Razorpay Checkout Script -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    var amount = {{ amt }} * 100;
-    var currency = 'INR';
-    var key = 'rzp_test_zL6UJeuzbo8rNk'; // Replace with your Razorpay key
 
-    var options = {
-        "key": key,
-        "amount": amount,
-        "currency": currency,
-        "name": "Car Castle",
-        "description": "Django and Data Science",
-        "image": "https://example.com/your_logo.jpg",
-        "handler": function (response) {
-            // Handle success callback, e.g., redirect to success page
-            console.log(response);
-            // Example redirect:
-            window.location.href = '/success';
-        },
-        "prefill": {
-            "name": "Priyansh",
-            "email": "priyanshparmar199@gmail.com"
-        },
-        "theme": {
-            "color": "#F37254"
-        }
-    };
 
-    var rzp = new Razorpay(options);
 
-    document.getElementById('rzp-button').onclick = function (e) {
-        rzp.open();
-        e.preventDefault();
-    }
+    $(document).ready(function () {
+        $('#rzp-button').click(function (e) {
+            e.preventDefault();
+            var token = $("[name='csrfmiddlewaretoken']").val();
+            $.ajax({
+                method: "GET",
+                url: "/proceed-to-pay",
+                success: function (response) {
+                    console.log(response);
+                    var options = {
+                    "key": "rzp_test_zL6UJeuzbo8rNk", // Enter the Key ID generated from the Dashboard
+                    "amount": response.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                    "currency": "INR",
+                    "name": "Car Castle",
+                    "description": "Test Transaction",
+                    "image": "https://example.com/your_logo",
+                    "order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                    "handler": function (response2){
+                        alert(response2.razorpay_payment_id);
+                        data = {
+                            "payment_id": response2.razorpay_payment_id,
+                            csrfmiddlewaretoken: token
+                        }
+                        $.ajax({
+                            method: "POST",
+                            url: "/confirm-booking",
+                            data: data,
+                            success: function (response3) {
+                                alert(response.razorpay_payment_id);
+                                window.location.href = '/viewbookings';
+                            }
+                        });
+
+                    },
+                    "prefill": {
+                        "name": "Priyansh Parmar",
+                        "email": "priyansh.parmar@gmail.com",
+                        "contact": "9586119719"
+                    },
+                    "notes": {
+                        "address": "Razorpay Corporate Office"
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            }
+            });
+        });
+    });
+
+
 </script>
 
 <!-- Bootstrap JS (optional, for Bootstrap features that require JS) -->

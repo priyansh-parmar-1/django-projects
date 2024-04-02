@@ -38,6 +38,7 @@ urlpatterns = [
     path('verifyotp', verifyotp, name='verifyotp'),
     path('forgotPassword/', forgotPassword, name='forgotPassword'),
     path('payment/', payment, name='payment'),
+    path('proceed-to-pay/', proceedToPay, name='proceedToPay'),
     path('viewbookings/', view_bookings, name='viewbookings'),
     path('viewbookings', view_bookings, name='viewbookings'),
     path('about/', about, name='about'),
@@ -45,6 +46,8 @@ urlpatterns = [
     path('invoice/<int:booking_id>/', downloadinvoice, name='invoice'),
     path('terms/', terms, name='terms'),
     path('success/', success, name='success'),
+    path('confirm-booking/', confirm_booking, name='confirm_booking'),
+    path('confirm-booking', confirm_booking, name='confirm_booking'),
 
 ]
 if settings.DEBUG:
