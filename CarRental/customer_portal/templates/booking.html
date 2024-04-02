@@ -1,6 +1,21 @@
 {% extends 'masterpage.html' %}
 {% block content %}
 {% load static %}
+<script>
+    function validateDates() {
+        var pickupDate = new Date(document.getElementById("pickupdate").value);
+        var dropDate = new Date(document.getElementById("dropdate").value);
+        var differenceInTime = dropDate.getTime() - pickupDate.getTime();
+        var differenceInDays = differenceInTime / (1000 * 3600 * 24);
+
+        if (differenceInDays > 10) {
+            alert("The difference between pickup date and drop date should not be greater than 10 days.");
+            return false;
+        }
+        return true;
+    }
+</script>
+
     <!-- Page Header Start -->
     <div class="container-fluid page-header">
         <h1 class="display-3 text-uppercase text-white mb-3">Car Booking</h1>
@@ -26,6 +41,9 @@
                     <h4 class="mb-2">₹{{car.charge}}/Hour</h4><br>
                        <h6>Terms and Conditions:</h6>
                         <ul>
+                            <li>
+                                All cars must be rented for maximum of 10 days.
+                            </li>
                             <li>
                                 All renters must be 18 years of age or older and possess a valid driver's license.
                             </li>
@@ -67,7 +85,7 @@
 
 
     <!-- Car Booking Start -->
-<form action="{% url 'payment'%}" method="POST">
+<form action="{% url 'payment'%}" method="POST" onsubmit="return validateDates()">
     {% csrf_token %}
     <div class="container-fluid pb-5">
         <div class="container">
@@ -114,7 +132,7 @@
                                 <div class="date" id="date1" data-target-input="nearest">
                                     <label for="dropdate">Drop (date and time):</label>
                                     <input type="datetime-local" class="form-control p-4 datetimepicker-input" placeholder="Drop Date"
-                                         data-toggle="datetimepicker" id="dropdate" name="dropdate" required/>
+                                         data-toggle="datetimepicker" id="dropdate" name="dropdate" required disabled/>
                                 </div>
                             </div>
                         </div>
@@ -130,21 +148,43 @@
     </form>
     <!-- Car Booking End -->
 <script>
-function setminPickDate(){
+    window.onload = function() {
+        // Disable drop date input initially
+        var dropDateInput = document.getElementById("dropdate");
+        dropDateInput.disabled = true;
+    }
+
+    function setminPickDate() {
     var dateTimeInput = document.getElementById("pickupdate");
     var currentDate = new Date();
-    // Adding 2 hours to the current date
-    currentDate.setHours(currentDate.getHours() + 2);
+    // Adding 5 hours to the current date
+    currentDate.setHours(currentDate.getHours() + 5);
     var formattedDate = currentDate.toISOString().substring(0, 16);
     dateTimeInput.setAttribute("min", formattedDate);
-    dateTimeInput.setAttribute("value", formattedDate); // Set the value to the minimum allowed time
+
+    // Ensure the selected pickup date and time is not less than the current time plus 5 hours
+    var selectedDate = new Date(dateTimeInput.value);
+    if (selectedDate < currentDate) {
+        dateTimeInput.value = formattedDate;
+    }
+
+    // Reset drop date input
+    var dropDateInput = document.getElementById("dropdate");
+    dropDateInput.value = ''; // Clear the value
+    dropDateInput.disabled = true; // Disable drop date input
 }
 
-    function setMinDropDate(){
+
+
+    function setMinDropDate() {
         var dateTimeInput = document.getElementById("dropdate");
         var mindate = new Date(document.getElementById("pickupdate").value);
         var formattedDate = mindate.toISOString().substring(0, 16);
         dateTimeInput.setAttribute("min", formattedDate);
-    }</script>
+        dateTimeInput.disabled = false; // Enable drop date input
+    }
+</script>
+
+
 
  {% endblock %}
