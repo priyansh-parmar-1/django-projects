@@ -672,7 +672,7 @@ class PaymentAdmin(admin.ModelAdmin):
         elements.append(image)
         # Define the margin after the image
         margin_after_image = 40
-        elements.append(Spacer(4, margin_after_image))
+        elements.append(Spacer(5, margin_after_image))
         # Add a Spacer element to create
 
         # Table data
@@ -684,8 +684,8 @@ class PaymentAdmin(admin.ModelAdmin):
                 payment.cust.name,
                 payment.transaction,
                 payment.status,
-                payment.payment_date.strftime("Report Date : "+"%Y-%m-%d "),
-                payment.payment_date.strftime("%Y-%m-%d %H:%M:%S")
+                payment.payment_date.strftime("%Y-%m-%d  %H:%M:%S "),
+
             ])
 
         # Calculate column widths dynamically based on content
