@@ -18,8 +18,8 @@ from reportlab.platypus import Image
 #admin.site.register(models.Area)
 #admin.site.register(models.Company)
 #admin.site.register(models.Feedback)
-admin.site.register(models.Payment)
-admin.site.register(models.bookingstatus)
+#admin.site.register(models.Payment)
+#admin.site.register(models.bookingstatus)
 
 # report for payment
 
@@ -79,10 +79,16 @@ admin.site.register(models.bookingstatus)
 # =========================================================================================
 @admin.register(models.Booking)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = models.Booking.DisplayFields
+    list_display = ('booking_id','car','cust','amt','pick_add','drop_add','status','start_date_time','end_date_time','pick_pincode','drop_pincode','booking_date_time')
     # search_fields=('car','cust',)
-    list_filter=('car',)
+    readonly_fields = ('booking_id','car','cust','amt','pick_add','drop_add','start_date_time','end_date_time','pick_pincode','drop_pincode','booking_date_time','time')
+    list_filter=('car','cust')
 
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = super().get_readonly_fields(request, obj)
+        if obj and obj.status_id == 2 or obj.status_id == 4 or obj.status_id == 5:
+            readonly_fields += ('status',)
+        return readonly_fields
     def download_report_pdf(self, request, queryset):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="booking_report.pdf"'
@@ -153,9 +159,17 @@ class BookingAdmin(admin.ModelAdmin):
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('cust_id','image','name','phone_no','email','dl_no','address','drivinglicense','is_verified')
+    list_display = ('cust_id','image','name','dl_image','cust_image','otp','password','phone_no','email','dl_no','address','drivinglicense','is_verified')
     list_filter=('name','email',)
-
+    readonly_fields = tuple(field for field in list_display if field != 'is_verified')
+    # it is for hiding the password field
+    def get_fieldsets(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_fieldsets(request, obj)
+        else:
+            return (
+                (None, {'fields': ('cust_id', 'name', 'phone_no', 'email', 'dl_no', 'address', 'is_verified')}),
+            )
     def image(self,obj):
         return format_html('<img src="{0}" width="auto" height="100px">'.format(obj.cust_image.url))
     def drivinglicense(self,obj):
@@ -266,7 +280,7 @@ class CarAdmin(admin.ModelAdmin):
 
     def image(self,obj):
         return format_html('<img src="{0}" width="auto" height="100px">'.format(obj.car_image.url))
-    
+
     def download_report_pdf(self, request, queryset):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="car_report.pdf"'
@@ -324,16 +338,20 @@ class FeedbackAdmin(admin.ModelAdmin):
     search_fields=('cust','car',)
 
     def get_actions(self, request):
-        # Disable all actions
         actions = super().get_actions(request)
-        del actions['delete_selected']
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
         return actions
-    
-    
+
     def has_add_permission(self, request):
-        # Disable add permission
         return False
-    
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
     def get_customer_name(self, Customer):
         return Customer.cust.name if Customer.cust else ""
     get_customer_name.short_description = 'Customer'
@@ -439,3 +457,23 @@ class CompanyAdmin(admin.ModelAdmin):
     download_report_pdf.short_description = "Download Company Report PDF"
 
     actions = ['download_report_pdf']
+
+
+@admin.register(models.Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('payment_id', 'booking', 'cust', 'transaction', 'status', 'payment_date')
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

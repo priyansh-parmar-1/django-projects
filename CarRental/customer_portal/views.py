@@ -227,7 +227,7 @@ def view_bookings(request):
             time_difference = i.start_date_time - now
             i.time = int(time_difference.total_seconds() / 3600)
         return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id})
-        '''
+'''
         drop_code = request.POST.get('drop_pincode')
         pick_code = request.POST.get('pickup_pincode')
         drop_area = get_object_or_404(Area, pk=drop_code)
@@ -375,7 +375,7 @@ def payment(request):
         print(time_difference)
         total_hours = time_difference.total_seconds() / 3600
         print(total_hours)
-        amt = total_hours * charge
+        amt = round(total_hours * charge, 2)
         request.session['amt'] = amt
         print(amt)
         car_id = request.session.get('car_id')
@@ -438,7 +438,9 @@ def confirm_booking(request):
         car_id = request.session.get('car_id')
         car = get_object_or_404(Car, pk=car_id)
         cust_id = request.session.get('cust_id')
+        cust_obj = get_object_or_404(Customer, pk=cust_id)
         amt = request.session.get('amt')
+        payment_id = request.POST.get('payment_id')
         bk = Booking.objects.filter(car=car, end_date_time__gt=pick_date_time_str, status_id=1)
 
         if bk.exists():
@@ -447,12 +449,16 @@ def confirm_booking(request):
                 "%Y-%m-%d %H:%M:%S") + ' To: ' + bk[0].end_date_time.strftime("%Y-%m-%d %H:%M:%S")
             return render(request, 'booking_error.html',
                           {'alert_message': msg, 'car': car})
-
+        date = datetime.now()
         booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
                               status_id=1, start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
-                              pick_pincode=pick_area, drop_pincode=drop_area, time=0)
+                              pick_pincode=pick_area, drop_pincode=drop_area, time=0,booking_date_time=date)
         booking_obj.save()
-        return redirect('viewbookings')
+        payment_obj = Payment(booking=booking_obj,cust=cust_obj,transaction=payment_id,status='paid',payment_date=date)
+        payment_obj.save()
+        msg = 'Booking confirmed'
+        return render(request, 'view_bookings.html',
+                      {'message': msg})
 # ----------------------- VERIFY SIGNATURE  -----------------------------------
 
 
