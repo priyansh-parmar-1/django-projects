@@ -14,7 +14,14 @@ from datetime import datetime
 from reportlab.platypus import PageTemplate, Frame
 from reportlab.lib.styles import getSampleStyleSheet,ParagraphStyle
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
+from django.contrib.admin import SimpleListFilter
+from datetime import datetime
 import datetime
+# from rangefilter.filter import DateRangeFilter
+
+
+
 # from reportlab.platypus.frames import Frame, ShowBoundaryValue
 
 
@@ -121,32 +128,26 @@ class BookingAdmin(admin.ModelAdmin):
     list_display = ('booking_id','car','cust','amt','pick_add','drop_add','status','start_date_time','end_date_time','pick_pincode','drop_pincode','booking_date_time')
     # search_fields=('car','cust',)
     readonly_fields = ('booking_id','car','cust','amt','pick_add','drop_add','start_date_time','end_date_time','pick_pincode','drop_pincode','booking_date_time','time')
-    list_filter=('car','cust','status','booking_date_time')
+    # list_filter=('car','cust','status','booking_date_time')
+    list_filter = (
+        # ('booking_date_time', DateRangeFilter),'car','cust','status')
+        'booking_date_time','car','cust','status')
 
-
-    def get_readonly_fields(self, request, obj=None):
-        readonly_fields = super().get_readonly_fields(request, obj)
-        if obj and obj.status_id == 2 or obj.status_id == 4 or obj.status_id == 5:
-            readonly_fields += ('status',)
-        return readonly_fields
+    
     def download_report_pdf(self, request, queryset):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="booking_report.pdf"'
-        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=10, leftMargin=10, topMargin=20, bottomMargin=50)
+        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=10, leftMargin=10, topMargin=50, bottomMargin=50)
 
         elements = []
 
-        
         # Get the current date and time
         current_date = datetime.datetime.now().strftime("Report date  : "+"%Y/%m/%d ")
-        # current_date = datetime.datetime.now().strftime("Report date  : "+"%Y/%m/%d  %H:%M:%S")
-
         # Add the current date to the PDF elements
         current_date_paragraph = Paragraph(current_date, getSampleStyleSheet()["BodyText"])
         elements.append(current_date_paragraph)
 
-
-# Define a custom Paragraph style with centered alignment
+        # Define a custom Paragraph style with centered alignment
         centered_style = ParagraphStyle(
             name='CenteredHeading',
             parent=getSampleStyleSheet()["Heading1"],
@@ -158,14 +159,14 @@ class BookingAdmin(admin.ModelAdmin):
         # Add the image to the PDF elements
         image = Image(image_path, width=200, height=30)  # Adjust width and height as needed
         elements.append(image)
+
         # Define the margin after the image
         margin_after_image = 40
         # Add a Spacer element to create the margin after the image
         elements.append(Spacer(4, margin_after_image))
+
         # Add heading to the PDF using the centered style
-        # header1 = Paragraph("<b>Car Castle</b>", centered_style)
         header = Paragraph("<b>Booking Report</b>", centered_style)
-        # elements.append(header1)
         elements.append(header)
         elements.append(Paragraph("<br/>", getSampleStyleSheet()["BodyText"]))
 
@@ -186,22 +187,17 @@ class BookingAdmin(admin.ModelAdmin):
                 booking.drop_pincode
             ])
 
-        # Calculate column widths dynamically based on content
-        col_widths = [max([len(str(row[i])) * 3.4 for row in data]) for i in range(len(data[0]))]
+        # Adjust font size
+        font_size = 6
 
-        # Adjust font size if needed
-        font_size = 5.5 if max(col_widths) > 100 else 10
-
-        # Create table with adjusted column widths and font size
-        table = Table(data, colWidths=col_widths)
-
-        # Add style to table
+        # Create table with adjusted font size
+        table = Table(data)
         style = TableStyle([('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
                             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
                             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
                             ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                            ('FONTSIZE', (0, 0), (-1, -1), font_size),])
+                            ('FONTSIZE', (0, 0), (-1, -1), font_size)])
         table.setStyle(style)
 
         # Add table to PDF elements
@@ -215,7 +211,7 @@ class BookingAdmin(admin.ModelAdmin):
     download_report_pdf.short_description = "Download Report PDF"
 
     actions = ['download_report_pdf']
-# admin.site.register(YourModel, YourModelAdmin)
+
 
 
 # ending download report
@@ -491,7 +487,7 @@ class CarAdmin(admin.ModelAdmin):
             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
             ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTSIZE', (0, 0), (-1, -1),9),
         ])
         table.setStyle(style)
 
