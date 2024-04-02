@@ -56,7 +56,6 @@
                     "image": "https://example.com/your_logo",
                     "order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                     "handler": function (response2){
-                        alert(response2.razorpay_payment_id);
                         data = {
                             "payment_id": response2.razorpay_payment_id,
                             csrfmiddlewaretoken: token
@@ -66,7 +65,6 @@
                             url: "/confirm-booking",
                             data: data,
                             success: function (response3) {
-                                alert(response3.razorpay_payment_id);
                                 window.location.href = '/viewbookings';
                             }
                         });
