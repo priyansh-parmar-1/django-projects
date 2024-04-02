@@ -427,6 +427,7 @@ class CarAdmin(admin.ModelAdmin):
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('feedback_id','cust','car','description')
     # search_fields=('cust','car',)
+    list_filter = ('cust','car',)
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -623,7 +624,7 @@ class CompanyAdmin(admin.ModelAdmin):
 @admin.register(models.Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('payment_id', 'booking', 'cust', 'transaction', 'status', 'payment_date')
-
+    list_filter = ('cust',)
     def get_actions(self, request):
         actions = super().get_actions(request)
         if 'delete_selected' in actions:
