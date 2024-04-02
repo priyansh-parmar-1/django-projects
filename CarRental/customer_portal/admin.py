@@ -6,9 +6,16 @@ from django.http import HttpResponse
 from reportlab.lib import styles
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter,landscape
-from reportlab.platypus import SimpleDocTemplate,Table, TableStyle,Spacer
+from reportlab.platypus import SimpleDocTemplate,Table, TableStyle,Spacer,Paragraph
 from reportlab.lib.units import inch
 from reportlab.platypus import Image
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
+from datetime import datetime
+from reportlab.platypus import PageTemplate, Frame
+from reportlab.lib.styles import getSampleStyleSheet,ParagraphStyle
+from django.conf import settings
+import datetime
+# from reportlab.platypus.frames import Frame, ShowBoundaryValue
 
 
 # Register your models here.
@@ -77,21 +84,54 @@ admin.site.register(models.bookingstatus)
 #     actions = ['download_report_pdf']
 
 # =========================================================================================
+
 @admin.register(models.Booking)
 class BookingAdmin(admin.ModelAdmin):
     list_display = models.Booking.DisplayFields
-    # search_fields=('car','cust',)
-    list_filter=('car',)
+    list_filter=('car','booking_date_time')
 
     def download_report_pdf(self, request, queryset):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="booking_report.pdf"'
-        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=20, leftMargin=20, topMargin=20, bottomMargin=50)
+        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=10, leftMargin=10, topMargin=20, bottomMargin=50)
 
         elements = []
 
+        
+        # Get the current date and time
+        current_date = datetime.datetime.now().strftime("Report date  : "+"%Y/%m/%d ")
+        # current_date = datetime.datetime.now().strftime("Report date  : "+"%Y/%m/%d  %H:%M:%S")
+
+        # Add the current date to the PDF elements
+        current_date_paragraph = Paragraph(current_date, getSampleStyleSheet()["BodyText"])
+        elements.append(current_date_paragraph)
+
+
+# Define a custom Paragraph style with centered alignment
+        centered_style = ParagraphStyle(
+            name='CenteredHeading',
+            parent=getSampleStyleSheet()["Heading1"],
+            alignment=TA_CENTER
+        )
+
+        # Define the path to your image file
+        image_path = settings.MEDIA_ROOT + '/img/logo-no-background.png'
+        # Add the image to the PDF elements
+        image = Image(image_path, width=200, height=30)  # Adjust width and height as needed
+        elements.append(image)
+        # Define the margin after the image
+        margin_after_image = 40
+        # Add a Spacer element to create the margin after the image
+        elements.append(Spacer(4, margin_after_image))
+        # Add heading to the PDF using the centered style
+        # header1 = Paragraph("<b>Car Castle</b>", centered_style)
+        header = Paragraph("<b>Booking Report</b>", centered_style)
+        # elements.append(header1)
+        elements.append(header)
+        elements.append(Paragraph("<br/>", getSampleStyleSheet()["BodyText"]))
+
         # Table data
-        data = [[" ID  ", "Car", "Customer", "Amount  ", "Pickup Address", "Drop Address", "Status", "Start Date Time", "End Date Time", "Pickup Pincode", "Drop Pincode"]]
+        data = [[" ID  ", "Car", "Customer", "   Amount  ", "Pickup Address", "Drop Address", " Status     ", "Start Date Time", "End Date Time", "Pickup Pincode", "Drop Pincode"]]
         for booking in queryset:
             data.append([
                 booking.booking_id, 
@@ -107,17 +147,11 @@ class BookingAdmin(admin.ModelAdmin):
                 booking.drop_pincode
             ])
 
-        # col_widths = [max([len(str(row[i])) * 7 for row in data]) for i in range(len(data[0]))]
-        # table = Table(data, colWidths=col_widths)
-
-        # # Create table
-        # table = Table(data)
-            
-            # Calculate column widths dynamically based on content
-        col_widths = [max([len(str(row[i])) * 4.3 for row in data]) for i in range(len(data[0]))]
+        # Calculate column widths dynamically based on content
+        col_widths = [max([len(str(row[i])) * 3.4 for row in data]) for i in range(len(data[0]))]
 
         # Adjust font size if needed
-        font_size = 6.5 if max(col_widths) > 100 else 10
+        font_size = 5.5 if max(col_widths) > 100 else 10
 
         # Create table with adjusted column widths and font size
         table = Table(data, colWidths=col_widths)
@@ -134,7 +168,6 @@ class BookingAdmin(admin.ModelAdmin):
         # Add table to PDF elements
         elements.append(table)
 
-        # pdf.multiBuild(elements, canvasmaker=draw_scrollbar)/
         # Build PDF
         pdf.build(elements)
 
@@ -143,7 +176,6 @@ class BookingAdmin(admin.ModelAdmin):
     download_report_pdf.short_description = "Download Report PDF"
 
     actions = ['download_report_pdf']
-
 # admin.site.register(YourModel, YourModelAdmin)
 
 
@@ -167,8 +199,44 @@ class CustomerAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename="customer_report.pdf"'
 
         # Create PDF content using ReportLab
-        pdf = SimpleDocTemplate(response, pagesize=letter)
+        # pdf = SimpleDocTemplate(response, pagesize=letter)
+        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=10, leftMargin=10, topMargin=20, bottomMargin=50)
+
         elements = []
+
+         
+        # Get the current date and time
+        current_date = datetime.datetime.now().strftime("Report Date: "+"%Y-%m-%d ")
+        # current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Add the current date to the PDF elements
+        current_date_paragraph = Paragraph(current_date, getSampleStyleSheet()["BodyText"])
+        elements.append(current_date_paragraph)
+
+
+# Define a custom Paragraph style with centered alignment
+        centered_style = ParagraphStyle(
+            name='CenteredHeading',
+            parent=getSampleStyleSheet()["Heading1"],
+            alignment=TA_CENTER
+        )
+
+        # Define the path to your image file
+        image_path = settings.MEDIA_ROOT + '/img/logo-no-background.png'
+        # Add the image to the PDF elements
+        image = Image(image_path, width=200, height=30)  # Adjust width and height as needed
+        elements.append(image)
+        # Define the margin after the image
+        margin_after_image = 40
+        # Add a Spacer element to create the margin after the image
+        elements.append(Spacer(4, margin_after_image))
+        # Add heading to the PDF using the centered style
+        # header1 = Paragraph("<b>Car Castle</b>", centered_style)
+        header = Paragraph("<b>Customer Report</b>", centered_style)
+        # elements.append(header1)
+        elements.append(header)
+        elements.append(Paragraph("<br/>", getSampleStyleSheet()["BodyText"]))
+
 
         # Table data
         data = [["ID", "Name", "Phone No", "Email", "DL No", "Address", "Verified"]]
@@ -182,6 +250,12 @@ class CustomerAdmin(admin.ModelAdmin):
                 customer.address, 
                 "Yes" if customer.is_verified else "No"
             ])
+
+                    # Calculate column widths dynamically based on content
+            col_widths = [max([len(str(row[i])) * 3.4 for row in data]) for i in range(len(data[0]))]
+
+            # Adjust font size if needed
+            font_size = 4.5 if max(col_widths) > 100 else 10
 
         # Create table
         table = Table(data)
@@ -217,8 +291,43 @@ class AreaAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename="area_report.pdf"'
 
         # Create PDF content using ReportLab
-        pdf = SimpleDocTemplate(response, pagesize=letter)
+        # pdf = SimpleDocTemplate(response, pagesize=letter)
+        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=10, leftMargin=10, topMargin=20, bottomMargin=50)
+
         elements = []
+         
+        # Get the current date and time
+        current_date = datetime.datetime.now().strftime("Report Date : "+"%Y-%m-%d")
+        # current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Add the current date to the PDF elements
+        current_date_paragraph = Paragraph(current_date, getSampleStyleSheet()["BodyText"])
+        elements.append(current_date_paragraph)
+
+
+# Define a custom Paragraph style with centered alignment
+        centered_style = ParagraphStyle(
+            name='CenteredHeading',
+            parent=getSampleStyleSheet()["Heading1"],
+            alignment=TA_CENTER
+        )
+
+        # Define the path to your image file
+        image_path = settings.MEDIA_ROOT + '/img/logo-no-background.png'
+        # Add the image to the PDF elements
+        image = Image(image_path, width=200, height=30)  # Adjust width and height as needed
+        elements.append(image)
+        # Define the margin after the image
+        margin_after_image = 40
+        # Add a Spacer element to create the margin after the image
+        elements.append(Spacer(4, margin_after_image))
+        # Add heading to the PDF using the centered style
+        # header1 = Paragraph("<b>Car Castle</b>", centered_style)
+        header = Paragraph("<b>Area Report</b>", centered_style)
+        # elements.append(header1)
+        elements.append(header)
+        elements.append(Paragraph("<br/>", getSampleStyleSheet()["BodyText"]))
+
 
         # Table data
         data = [["Pincode     ", "Area Name                 "]]
@@ -261,7 +370,7 @@ class AreaAdmin(admin.ModelAdmin):
 @admin.register(models.Car)
 class CarAdmin(admin.ModelAdmin):
     list_display = ('car_id','company','registration_no','image','model_year','is_manual','mileage','is_diesel','car_type','model_name','capacity','color','charge')
-    search_fields=('company',)
+    # search_fields=('company',)
     list_filter=('company','model_year','is_manual','is_diesel','color')
 
     def image(self,obj):
@@ -272,8 +381,41 @@ class CarAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename="car_report.pdf"'
 
         # Create PDF content using ReportLab
-        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=20, leftMargin=20, topMargin=20, bottomMargin=50)
+        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=10, leftMargin=10, topMargin=20, bottomMargin=50)
         elements = []
+         
+        # Get the current date and time
+        current_date = datetime.datetime.now().strftime("Report Date :"+"%Y-%m-%d ")
+        # current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Add the current date to the PDF elements
+        current_date_paragraph = Paragraph(current_date, getSampleStyleSheet()["BodyText"])
+        elements.append(current_date_paragraph)
+
+
+# Define a custom Paragraph style with centered alignment
+        centered_style = ParagraphStyle(
+            name='CenteredHeading',
+            parent=getSampleStyleSheet()["Heading1"],
+            alignment=TA_CENTER
+        )
+
+        # Define the path to your image file
+        image_path = settings.MEDIA_ROOT + '/img/logo-no-background.png'
+        # Add the image to the PDF elements
+        image = Image(image_path, width=200, height=30)  # Adjust width and height as needed
+        elements.append(image)
+        # Define the margin after the image
+        margin_after_image = 40
+        # Add a Spacer element to create the margin after the image
+        elements.append(Spacer(4, margin_after_image))
+        # Add heading to the PDF using the centered style
+        # header1 = Paragraph("<b>Car Castle</b>", centered_style)
+        header = Paragraph("<b>Cars Report</b>", centered_style)
+        # elements.append(header1)
+        elements.append(header)
+        elements.append(Paragraph("<br/>", getSampleStyleSheet()["BodyText"]))
+
 
         # Table data
         data = [[" ID  ","Car Image", "   Company   ", "Registration No  ", "Model Name  ", "Car Type  ", "Charge  "]]
@@ -290,7 +432,7 @@ class CarAdmin(admin.ModelAdmin):
             ])
 
         # Calculate column widths dynamically based on content
-        col_widths = [max([len(str(row[i])) * 6 for row in data]) for i in range(len(data[0]))]
+        col_widths = [max([len(str(row[i])) * 4.9 for row in data]) for i in range(len(data[0]))]
 
         # Create table with adjusted column widths
         table = Table(data, colWidths=col_widths)
@@ -321,7 +463,7 @@ class CarAdmin(admin.ModelAdmin):
 @admin.register(models.Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ('feedback_id','cust','car','description')
-    search_fields=('cust','car',)
+    # search_fields=('cust','car',)
 
     def get_actions(self, request):
         # Disable all actions
@@ -348,8 +490,43 @@ class FeedbackAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename="feedback_report.pdf"'
 
         # Create PDF content using ReportLab
-        pdf = SimpleDocTemplate(response, pagesize=letter)
+        # pdf = SimpleDocTemplate(response, pagesize=letter)
+        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=10, leftMargin=10, topMargin=20, bottomMargin=50)
+
         elements = []
+         
+        # Get the current date and time
+        current_date = datetime.datetime.now().strftime("Report Date : "+"%Y-%m-%d ")
+        # current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Add the current date to the PDF elements
+        current_date_paragraph = Paragraph(current_date, getSampleStyleSheet()["BodyText"])
+        elements.append(current_date_paragraph)
+
+
+# Define a custom Paragraph style with centered alignment
+        centered_style = ParagraphStyle(
+            name='CenteredHeading',
+            parent=getSampleStyleSheet()["Heading1"],
+            alignment=TA_CENTER
+        )
+
+        # Define the path to your image file
+        image_path = settings.MEDIA_ROOT + '/img/logo-no-background.png'
+        # Add the image to the PDF elements
+        image = Image(image_path, width=200, height=30)  # Adjust width and height as needed
+        elements.append(image)
+        # Define the margin after the image
+        margin_after_image = 40
+        # Add a Spacer element to create the margin after the image
+        elements.append(Spacer(4, margin_after_image))
+        # Add heading to the PDF using the centered style
+        # header1 = Paragraph("<b>Car Castle</b>", centered_style)
+        header = Paragraph("<b>Feedback Report</b>", centered_style)
+        # elements.append(header1)
+        elements.append(header)
+        elements.append(Paragraph("<br/>", getSampleStyleSheet()["BodyText"]))
+
 
         # Table data
         data = [["Feedback ID", "Customer", "Car", "Description"]]
@@ -400,8 +577,43 @@ class CompanyAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename="company_report.pdf"'
 
         # Create PDF content using ReportLab
-        pdf = SimpleDocTemplate(response, pagesize=letter)
+        # pdf = SimpleDocTemplate(response, pagesize=letter)
+        pdf = SimpleDocTemplate(response, pagesize=landscape(letter), rightMargin=10, leftMargin=10, topMargin=20, bottomMargin=50)
+
         elements = []
+         
+        # Get the current date and time
+        current_date = datetime.datetime.now().strftime("Report Date : "+"%Y-%m-%d ")
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Add the current date to the PDF elements
+        current_date_paragraph = Paragraph(current_date, getSampleStyleSheet()["BodyText"])
+        elements.append(current_date_paragraph)
+
+
+# Define a custom Paragraph style with centered alignment
+        centered_style = ParagraphStyle(
+            name='CenteredHeading',
+            parent=getSampleStyleSheet()["Heading1"],
+            alignment=TA_CENTER
+        )
+
+        # Define the path to your image file
+        image_path = settings.MEDIA_ROOT + '/img/logo-no-background.png'
+        # Add the image to the PDF elements
+        image = Image(image_path, width=200, height=30)  # Adjust width and height as needed
+        elements.append(image)
+        # Define the margin after the image
+        margin_after_image = 40
+        # Add a Spacer element to create the margin after the image
+        elements.append(Spacer(4, margin_after_image))
+        # Add heading to the PDF using the centered style
+        # header1 = Paragraph("<b>Car Castle</b>", centered_style)
+        header = Paragraph("<b>Company Report</b>", centered_style)
+        # elements.append(header1)
+        elements.append(header)
+        elements.append(Paragraph("<br/>", getSampleStyleSheet()["BodyText"]))
+
 
         # Table data
         data = [["  Company ID   ", "  Company Name  "]]
