@@ -221,7 +221,7 @@ def view_bookings(request):
                 i.time = int(time_difference.total_seconds() / 3600)
             return render(request, 'view_bookings.html', {'bookings': bookings, 'msg': msg, 'cust_id': cust_id})
     else:
-        bookings = Booking.objects.filter(cust=cust_id)
+        bookings = Booking.objects.filter(cust=cust_id).order_by('-booking_date_time')
         now = timezone.now()
         for i in bookings:
             time_difference = i.start_date_time - now
