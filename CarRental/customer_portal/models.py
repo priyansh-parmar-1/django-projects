@@ -123,7 +123,7 @@ class Car(models.Model):
         managed = False
         db_table = 'car'
     def __str__(self):
-        return self.model_name
+        return str(self.model_name)
 
 class Customer(models.Model):
     cust_id = models.AutoField(primary_key=True)
@@ -169,14 +169,14 @@ class Booking(models.Model):
     pick_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='pick_pincode')
     drop_pincode = models.ForeignKey(Area, models.DO_NOTHING, db_column='drop_pincode', related_name='booking_drop_pincode_set')
     time = models.IntegerField()
-    booking_date_time = models.DateTimeField(default=timezone.now())
+    booking_date_time = models.DateTimeField()
     DisplayFields = ['booking_id','car','cust','amt','pick_add','drop_add','status','start_date_time','end_date_time','pick_pincode','drop_pincode','booking_date_time']
     class Meta:
         managed = False
         db_table = 'booking'
 
     def __str__(self):
-        return str(bookingstatus.status_name)
+        return str(self.car.model_name)
 
 
 
@@ -245,12 +245,12 @@ class Payment(models.Model):
     payment_id = models.AutoField(primary_key=True)
     booking = models.ForeignKey(Booking, models.DO_NOTHING)
     cust = models.ForeignKey(Customer, models.DO_NOTHING)
-    transaction = models.IntegerField()
-    status = models.IntegerField()
+    transaction = models.CharField(max_length=255)
+    status = models.CharField(max_length=20)
     payment_date = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'payment'
     def __str__(self):
-        return self.payment_id
+        return str(self.payment_id)
