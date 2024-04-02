@@ -206,7 +206,7 @@ def view_bookings(request):
     cust_id = request.session.get('cust_id')
     if cust_id == 0 or cust_id == None:
         return redirect('login')
-    '''if request.method == 'POST':
+    if request.method == 'POST':
         fg = int(request.POST.get('flag'))
         if fg == 1:
             booking_id = request.POST.get('booking_id')
@@ -220,6 +220,14 @@ def view_bookings(request):
                 time_difference = i.start_date_time - now
                 i.time = int(time_difference.total_seconds() / 3600)
             return render(request, 'view_bookings.html', {'bookings': bookings, 'msg': msg, 'cust_id': cust_id})
+    else:
+        bookings = Booking.objects.filter(cust=cust_id)
+        now = timezone.now()
+        for i in bookings:
+            time_difference = i.start_date_time - now
+            i.time = int(time_difference.total_seconds() / 3600)
+        return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id})
+        '''
         drop_code = request.POST.get('drop_pincode')
         pick_code = request.POST.get('pickup_pincode')
         drop_area = get_object_or_404(Area, pk=drop_code)
@@ -264,8 +272,9 @@ def view_bookings(request):
         i.time = int(time_difference.total_seconds() / 3600)
     return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id, })'''
 
+'''
     bookings = Booking.objects.filter(cust=cust_id).order_by('booking_date_time')
-    return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id, })
+    return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id, })'''
 
 
 def profile(request):
