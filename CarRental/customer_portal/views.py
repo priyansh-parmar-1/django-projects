@@ -414,8 +414,8 @@ def payment(request):
 
         cust_id = request.session.get('cust_id')
         charge = request.session.get('charge')
-
-    return render(request, 'payment.html',{'amt': amt, "order_id": order_id})
+        cust_obj = Customer.objects.get(cust_id=cust_id)
+    return render(request, 'payment.html',{'amt': amt, "order_id": order_id, 'cust': cust_obj})
 
 def proceedToPay(request):
     amt = request.session.get('amt')
