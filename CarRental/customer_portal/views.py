@@ -178,7 +178,8 @@ def carDetails(request, car_id):
 def downloadinvoice(request, booking_id):
     booking = Booking.objects.get(booking_id=booking_id)
     template = get_template('invoice.html')
-    html = template.render({'booking': booking})
+    curdate = datetime.now()
+    html = template.render({'booking': booking,'date': curdate})
     # Create PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
