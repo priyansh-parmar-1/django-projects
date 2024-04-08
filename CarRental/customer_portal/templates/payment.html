@@ -65,6 +65,7 @@
                             url: "/confirm-booking",
                             data: data,
                             success: function (response3) {
+                                alert("booking successfull! your payment id is : "+response2.razorpay_payment_id);
                                 window.location.href = '/viewbookings';
                             }
                         });
