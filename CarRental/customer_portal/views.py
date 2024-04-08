@@ -178,7 +178,8 @@ def carDetails(request, car_id):
 def downloadinvoice(request, booking_id):
     booking = Booking.objects.get(booking_id=booking_id)
     template = get_template('invoice.html')
-    html = template.render({'booking': booking})
+    curdate = datetime.now()
+    html = template.render({'booking': booking,'date': curdate})
     # Create PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
@@ -413,8 +414,8 @@ def payment(request):
 
         cust_id = request.session.get('cust_id')
         charge = request.session.get('charge')
-
-    return render(request, 'payment.html',{'amt': amt, "order_id": order_id})
+        cust_obj = Customer.objects.get(cust_id=cust_id)
+    return render(request, 'payment.html',{'amt': amt, "order_id": order_id, 'cust': cust_obj})
 
 def proceedToPay(request):
     amt = request.session.get('amt')
