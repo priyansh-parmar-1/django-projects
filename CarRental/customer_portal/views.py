@@ -228,55 +228,6 @@ def view_bookings(request):
             time_difference = i.start_date_time - now
             i.time = int(time_difference.total_seconds() / 3600)
         return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id})
-'''
-        drop_code = request.POST.get('drop_pincode')
-        pick_code = request.POST.get('pickup_pincode')
-        drop_area = get_object_or_404(Area, pk=drop_code)
-        pick_area = get_object_or_404(Area, pk=pick_code)
-        pick_location = request.POST.get('pickuplocation')
-        drop_location = request.POST.get('droplocation')
-        pick_date_time_str = request.POST.get('pickupdate')
-        drop_date_time_str = request.POST.get('dropdate')
-        car_id = request.session.get('car_id')
-        car = get_object_or_404(Car, pk=car_id)
-        cust_id = request.session.get('cust_id')
-        charge = request.session.get('charge')
-        pick_date_time = datetime.strptime(pick_date_time_str, '%Y-%m-%dT%H:%M')
-        drop_date_time = datetime.strptime(drop_date_time_str, '%Y-%m-%dT%H:%M')
-
-        time_difference = drop_date_time - pick_date_time
-        total_hours = time_difference.total_seconds() / 3600
-        amt = total_hours * charge
-        bk = Booking.objects.filter(car=car, end_date_time__gt=pick_date_time, status_id=1)
-
-        if bk.exists():
-            # If there's an existing booking with end_date_time later than pick_date_time
-            msg= 'Cannot make booking. Overlapping with existing booking From: '+bk[0].start_date_time.strftime("%Y-%m-%d %H:%M:%S") +' To: '+bk[0].end_date_time.strftime("%Y-%m-%d %H:%M:%S")
-            return render(request, 'booking_error.html',
-                          {'alert_message': msg, 'car': car})
-
-        booking_obj = Booking(car=car, cust_id=cust_id, amt=amt, pick_add=pick_location, drop_add=drop_location,
-                              status_id=1, start_date_time=pick_date_time_str, end_date_time=drop_date_time_str,
-                              pick_pincode=pick_area, drop_pincode=drop_area, time=0)
-        booking_obj.save()
-        msg = 'Booking confirmed'
-        bookings = Booking.objects.filter(cust=cust_id).order_by('booking_date_time')
-        now = timezone.now()
-        for i in bookings:
-            time_difference = i.start_date_time - now
-            i.time = int(time_difference.total_seconds() / 3600)
-        return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id, 'msg': msg})
-    bookings = Booking.objects.filter(cust=cust_id).order_by('booking_date_time')
-    now = timezone.now()
-    for i in bookings:
-        time_difference = i.start_date_time - now
-        i.time = int(time_difference.total_seconds() / 3600)
-    return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id, })'''
-
-'''
-    bookings = Booking.objects.filter(cust=cust_id).order_by('booking_date_time')
-    return render(request, 'view_bookings.html', {'bookings': bookings, 'cust_id': cust_id, })'''
-
 
 def profile(request):
     cust_id = request.session.get('cust_id')
@@ -375,8 +326,9 @@ def payment(request):
         time_difference = drop_date_time - pick_date_time
         print(time_difference)
         total_hours = time_difference.total_seconds() / 3600
+
         print(total_hours)
-        amt = round(total_hours * charge, 2)
+        amt = round(total_hours * charge, 2) + 5000
         request.session['amt'] = amt
         print(amt)
         car_id = request.session.get('car_id')
@@ -465,48 +417,3 @@ def confirm_booking(request):
 
 def success(request):
     return render(request, "payment-successful.html")
-'''
-@csrf_exempt
-def paymenthandler(request):
-    # only accept POST request.
-    if request.method == "POST":
-        amount = request.session.get('charge')
-        try:
-            # get the required parameters from post request.
-            payment_id = request.POST.get('razorpay_payment_id', '')
-            razorpay_order_id = request.POST.get('razorpay_order_id', '')
-            signature = request.POST.get('razorpay_signature', '')
-
-            params_dict = {
-                'razorpay_order_id': razorpay_order_id,
-                'razorpay_payment_id': payment_id,
-                'razorpay_signature': signature
-            }
-
-            # verify the payment signature.
-
-            signature = razorpay_client.utility.verify_payment_signature(
-                params_dict)
-            if signature is not None:
-
-                try:
-                    # capture the payemt
-                    razorpay_client.payment.capture(payment_id, amount)
-
-                    # render success page on successful caputre of payment
-                    return render(request, 'payment-successful.html')
-                except Exception as e:
-                    print(e)
-                    # if there is an error while capturing payment.
-                    return render(request, 'payment-aborted.html')
-            else:
-                print('signature verification fails')
-                # if signature verification fails.
-                return render(request, 'payment-fail.html')
-        except Exception as e:
-            print(e)
-            return render(request, 'payment-aborted.html')
-    else:
-        # if other than POST request is made.
-        return render(request, 'payment-aborted.html')'''
-

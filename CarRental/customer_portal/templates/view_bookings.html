@@ -21,8 +21,8 @@
         {% for booking in bookings %}
 
         <tr>
-            <td><img src="{{booking.car.car_image.url}}" height="200px" width="300px"></td>
-            <td>{{booking.car.model_name}}</td>
+            <td><a href="/cars/{{booking.car.car_id}}"><img src="{{booking.car.car_image.url}}" height="200px" width="300px"></a></td>
+            <td><a href="/cars/{{booking.car.car_id}}">{{booking.car.model_name}}</a></td>
             <td>{{booking.start_date_time}}</td>
             <td>{{booking.end_date_time}}</td>
             <td>{{booking.amt}}</td>
